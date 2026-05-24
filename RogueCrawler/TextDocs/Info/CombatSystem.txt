@@ -13,9 +13,9 @@ Whenever you gain a point in a weapon skill, you also gain a point in that gener
 
 General Skills [MAJOR/MINOR]:
 	Axe		[STR, DEX]
-	Blade	[DEX, STR]
+	Blade	[AGI, STR]
 	Blunt	[STR, CON]
-	Ranged	[DEX, WIS]
+	Ranged	[AGI, DEX]
 	Spear	[DEX, CON]
 
 TO_HIT:

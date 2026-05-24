@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommandEngine\CommandEngine.csproj" />
+    <ProjectReference Include="..\..\CommandEngine\CommandEngine\CommandEngine.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -42,8 +42,3 @@
 
 - Probably gonna end up porting most of this to Unity. Or something.
 	- this will mean doing the procedural generation from scratch. Time to rewrite my tile system.
-
-
-
-
-	
