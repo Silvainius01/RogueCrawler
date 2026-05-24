@@ -1,25 +1,31 @@
 ﻿Attributes: 
+	Body (Red)
 	STR -> Physical strength. Carry load, heavy armor, hand-to-hand damage, and dmg bonus for some weapon types.
 	CON -> Consitution. How much damage you can take through conditioning. Can also be interpreted as your resistance to afflictions from various sources.
 
+	Technique (Green)
 	AGI -> Agility. Represents whole body control and balance. Think dancing, or being able to weave through a crowd quickly.
 	DEX -> Dexterity. Represents fine motor control and flexibility.
 
+	Mind (Blue)
 	INT -> Intelligence. Can loosely represent book smarts, and how well your character understands magic on a technical level. 
 	WIL -> Willpower. Characters with high willpower can force magical effects into existance, or squeeze more power out of their spells.
 
+	Personality (Yellow)
 	CHA -> Charisma. Charisma allows you to convince people, gods, and in some cases, even the fabric of reality itself into granting you favorable terms and outcomes.
-	LCK -> Luck. 
+	LCK -> Luck. Sometimes, things just go your way.
 
 HP = STR * 2.5 + (CON+1) * 5
-FP = CON * 2.5 + (DEX+1) * 5
-MP = ((INT+CHA) * 2) + (WIS+1) * 5
+FP = (CON+WIL) * 2 + (AGI+1) * 5
+MP = (INT+CHA) * 2 + (WIL+1) * 5
 
-Combat Speed = 1 + (DEX * 2 + WIS + (CHA /2)) / 10
+Combat Speed = 1 + (DEX * 2 + WIL + (CHA /2)) / 10
 	Your actions per round is equal to the floor of your speed value.
 	Anything above the floor becomes a % chance to get an additonal action.
 	In battle, combat order is determined by DESCENDING speed order. 
 	A creature with 2.5 speed goes before one with 2.4 speed, and so on.
+
+Crit Chance = ((LCK * 5) + INT + DEX) / 500
 
 Exp Need Per level: 100 + ((Level - 1) * 200)
 	1 -> 100

@@ -83,5 +83,11 @@ namespace RogueCrawler
             }
             return true;
         }
+
+        public static void GenerateDefaultMaterials()
+        {
+            List<ItemMaterial> materials = new List<ItemMaterial>(16);
+
+        }
     }
 }

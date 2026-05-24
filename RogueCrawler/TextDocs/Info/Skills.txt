@@ -1,0 +1,15 @@
+﻿Skills are character abilities that are increased by doing relevant tasks, or paying for lessons from various trainers.
+All skills are governed by at least one, and commonly two, attributes.
+
+List of Skills
+	Axe		[STR, DEX]
+	Blade	[AGI, STR]
+		Dagger [AGI, DEX]
+	Blunt	[STR, CON]
+	Ranged	[AGI, DEX]
+	Spear	[DEX, CON]
+
+	Arcane	[]
+	Astral
+	Divine
+	Elemental
