@@ -23,7 +23,7 @@ namespace RogueCrawler
                 .Where(type => type.ArmorSlot == armorSlot).RandomItem();
 
             float quality = GetQuality(aParams);
-            ItemMaterial material = GetRandomMaterial(data);
+            MaterialTypeData material = GetRandomMaterial(data);
 
             ItemArmor armor = new ItemArmor()
             {
@@ -85,7 +85,7 @@ namespace RogueCrawler
             return armor;
         }
 
-        private ItemMaterial GetRandomMaterial(ArmorTypeData armorData)
+        private MaterialTypeData GetRandomMaterial(ArmorTypeData armorData)
         {
             return MaterialTypeManager.Materials.Values
                 .Where(m => armorData.AllowedMaterials.Contains(m.Name) || (armorData.AllowAnyMetal && m.IsMetallic))

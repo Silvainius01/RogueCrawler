@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Collections.ObjectModel;
 using System.Threading;
+using System.Runtime.CompilerServices;
 
 namespace RogueCrawler
 {
@@ -65,6 +66,7 @@ namespace RogueCrawler
         public CreatureStat Fatigue { get => Stats[1]; }
         public CreatureStat Mana { get => Stats[2]; }
         public CreatureStat CombatSpeed { get => Stats[3]; }
+        public CreatureStat CritChance { get => Stats[4]; }
 
         public DungeonRoom CurrentRoom { get; set; }
         public ItemWeapon PrimaryWeapon { get; set; }
@@ -83,20 +85,27 @@ namespace RogueCrawler
         private Dictionary<string, int> _typeResistances = new Dictionary<string, int>();
         private Dictionary<DamageCategory, int> _categoryResistances = new Dictionary<DamageCategory, int>();
 
+        private int this[AttributeType attr] => GetAttribute(attr);
+
         public Creature()
         {
             var maxHealthFunc = (Creature c) =>
-                c.GetAttribute(AttributeType.STR) * 2.5f +
-                (c.GetAttribute(AttributeType.CON) + 1) * 5;
+                (c[AttributeType.STR] + c[AttributeType.AGI]) * 2f +
+                (c[AttributeType.CON] + 1) * 5;
             var maxFatigueFunc = (Creature c) =>
-                c.GetAttribute(AttributeType.CON) * 2.5f +
-                (c.GetAttribute(AttributeType.DEX) + 1) * 5;
+                (c[AttributeType.CON] + c[AttributeType.WIL]) * 2f +
+                (c[AttributeType.DEX] + 1) * 5f;
             var maxManaFunc = (Creature c) =>
-                (c.GetAttribute(AttributeType.INT) + c.GetAttribute(AttributeType.CHA)) * 2 +
-                (c.GetAttribute(AttributeType.WIS) + 1) * 5.0f;
+                (c[AttributeType.INT] + c[AttributeType.CHA]) * 2 +
+                (c[AttributeType.WIL] + 1) * 5.0f;
             var combatSpeedFunc = (Creature c) => 1.0f + (
-                c.GetAttribute(AttributeType.DEX) * 2.0f +
-                c.GetAttribute(AttributeType.CHA)) / 10.0f;
+                (c[AttributeType.DEX] * 2f) + 
+                (c[AttributeType.CHA] / 2f) +
+                + c[AttributeType.WIL]) / 10.0f;
+            var critChanceFunc = (Creature c) =>
+                (c[AttributeType.LCK] * 5f +
+                c[AttributeType.INT] +
+                c[AttributeType.DEX]) / 500f;
 
             Afflictions = new CrawlerAttributeSet(0);
             MaxAttributes = new CrawlerAttributeSet(0);
@@ -104,10 +113,11 @@ namespace RogueCrawler
 
             Stats = new List<CreatureStat>()
             {
-                new CreatureStat(this, maxHealthFunc, AttributeType.STR, AttributeType.CON),
-                new CreatureStat(this, maxFatigueFunc, AttributeType.DEX, AttributeType.CON),
-                new CreatureStat(this, maxManaFunc, AttributeType.INT, AttributeType.WIS, AttributeType.CHA),
-                new CreatureStat(this, combatSpeedFunc, AttributeType.DEX, AttributeType.CHA)
+                new CreatureStat(this, maxHealthFunc, AttributeType.STR, AttributeType.CON, AttributeType.AGI),
+                new CreatureStat(this, maxFatigueFunc, AttributeType.AGI, AttributeType.CON, AttributeType.WIL),
+                new CreatureStat(this, maxManaFunc, AttributeType.INT, AttributeType.WIL, AttributeType.CHA),
+                new CreatureStat(this, combatSpeedFunc, AttributeType.DEX, AttributeType.CHA, AttributeType.WIL),
+                new CreatureStat(this, critChanceFunc, AttributeType.LCK, AttributeType.INT, AttributeType.DEX),
             };
 
             Armor = new CreatureArmorSlots();
@@ -172,7 +182,7 @@ namespace RogueCrawler
         {
             float chance = 0.01f;
             chance *= (Proficiencies.GetSkillLevel(CreatureSkill.Evasion) / 4 * 3) + (Proficiencies.GetSkillLevel(CreatureSkill.Unarmored) / 4);
-            chance *= GetAttributePercent(AttributeType.DEX) + (GetAttributePercent(AttributeType.WIS) / 2);
+            chance *= GetAttributePercent(AttributeType.DEX) + (GetAttributePercent(AttributeType.WIL) / 2);
             chance *= 0.25f + Fatigue.Percent;
             return chance;
         }

@@ -17,7 +17,7 @@ namespace RogueCrawler
         public Vector2Int WeightRange { get; set; } = new Vector2Int(-1, -1);
         public Vector2Int QualityRange { get; set; } = new Vector2Int(-1, -1);
 
-        public ItemMaterial Material { get; set; } = MaterialTypeManager.DefaultMaterial;
+        public MaterialTypeData Material { get; set; } = MaterialTypeManager.DefaultMaterial;
 
         public float QualityOverride = -1.0f;
         public QualityLevel Quality { get => Qualities[0]; }

@@ -58,7 +58,7 @@ namespace RogueCrawler
             // MaterialNameCommandModule = new MappedCommandModule<ItemMaterial>("What is the default material name prompt??", Materials);
         }
 
-        public static void GenerateDefaultDamageTypes()
+        public static void GenerateDefaultTypes()
         {
             List<DamageTypeData> types = new List<DamageTypeData>(16);
 

@@ -4,18 +4,18 @@
 	CON -> Consitution. How much damage you can take through conditioning. Can also be interpreted as your resistance to afflictions from various sources.
 
 	Technique (Green)
-	AGI -> Agility. Represents whole body control and balance. Think dancing, or being able to weave through a crowd quickly.
+	AGI -> Agility. Represents whole body control, balance and conditioning. Think dancing, long distance running, or being able to weave through a crowd quickly.
 	DEX -> Dexterity. Represents fine motor control and flexibility.
 
 	Mind (Blue)
 	INT -> Intelligence. Can loosely represent book smarts, and how well your character understands magic on a technical level. 
-	WIL -> Willpower. Characters with high willpower can force magical effects into existance, or squeeze more power out of their spells.
+	WIL -> Willpower. Characters with high willpower can force magical effects into existance and squeeze more power out of their spells or body.
 
 	Personality (Yellow)
 	CHA -> Charisma. Charisma allows you to convince people, gods, and in some cases, even the fabric of reality itself into granting you favorable terms and outcomes.
 	LCK -> Luck. Sometimes, things just go your way.
 
-HP = STR * 2.5 + (CON+1) * 5
+HP = (STR+AGI) * 2 + (CON+1) * 5
 FP = (CON+WIL) * 2 + (AGI+1) * 5
 MP = (INT+CHA) * 2 + (WIL+1) * 5
 

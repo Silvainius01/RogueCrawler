@@ -38,7 +38,6 @@ namespace RogueCrawler
             stateManagers.Add(CrawlerState.Menu, new CrawlerMenuManager(this));
             stateManagers.Add(CrawlerState.Game, new CrawlerGameManager(this));
             player = new PlayerCharacter();
-
         }
 
         public void UpdateLoop()

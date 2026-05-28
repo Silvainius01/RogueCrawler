@@ -8,7 +8,7 @@ namespace RogueCrawler
     enum DungeonSize { Small, Medium, Large, Huge }
     enum CreatureType { Humanoid, Goblinoid, Beast, Fey, Demon, Angel }
     enum Allignment { LawfulGood, LawfulNeutral, LawfulEvil, NeutralGood, TrueNeutral, NeutralEvil, ChaoticGood, ChaoticNeutral, ChoaticEvil }
-    enum AttributeType { STR, DEX, CON, INT, WIS, CHA }
+    enum AttributeType { STR, CON, AGI, DEX, INT, WIL, CHA, LCK }
     enum Direction { North, East, South, West }
     enum DungeonChestType { Weapon, Armor }
     enum QualityLevel { Low, Normal, Superior, Exalted, Legendary, Divine }

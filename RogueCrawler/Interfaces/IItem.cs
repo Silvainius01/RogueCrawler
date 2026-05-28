@@ -11,7 +11,7 @@ namespace RogueCrawler
         float Weight { get; set; }
         float Quality { get; set; }
         string ItemName { get; set; }
-        ItemMaterial Material { get; set; }
+        MaterialTypeData Material { get; set; }
 
         int GetValue();
         float GetRawValue();

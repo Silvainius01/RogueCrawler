@@ -18,7 +18,7 @@ namespace RogueCrawler
         public int BaseValue { get; set; }
         public float Weight { get; set; }
         public float Quality { get; set; }
-        public ItemMaterial Material { get; set; }
+        public MaterialTypeData Material { get; set; }
 
         public float Condition { get; set; } = 1;
         public float MaxCondition { get; set; } = 1;

@@ -18,7 +18,7 @@ namespace RogueCrawler
         public int BaseValue { get; set; }
         public float Weight { get; set; }
         public float Quality { get; set; }
-        public ItemMaterial Material { get; set; }
+        public MaterialTypeData Material { get; set; }
 
         public string ItemName { get; set; } // Display Name
         public string ObjectName { get; set; } // Armor Type

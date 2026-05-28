@@ -4,7 +4,6 @@ All skills are governed by at least one, and commonly two, attributes.
 List of Skills
 	Axe		[STR, DEX]
 	Blade	[AGI, STR]
-		Dagger [AGI, DEX]
 	Blunt	[STR, CON]
 	Ranged	[AGI, DEX]
 	Spear	[DEX, CON]

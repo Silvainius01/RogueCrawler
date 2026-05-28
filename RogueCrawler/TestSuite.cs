@@ -329,7 +329,7 @@ namespace RogueCrawler
 
         public void GenerateDefaultDamageTypes(List<string> args)
         {
-            DamageTypeManager.GenerateDefaultDamageTypes();
+            DamageTypeManager.GenerateDefaultTypes();
         }
     }
 }

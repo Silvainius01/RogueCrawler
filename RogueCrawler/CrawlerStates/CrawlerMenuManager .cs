@@ -21,7 +21,8 @@ namespace RogueCrawler
             commands.Add(new ConsoleCommand("again", NewDungeon));
             commands.Add(new ConsoleCommand("save", SaveCharacter));
             commands.Add(new ConsoleCommand("load", LoadCharacter));
-            commands.Add(new ConsoleCommand("test", TestCommand));
+            commands.Add(new ConsoleCommand("chars", PrintCharacters));
+            commands.Add(new ConsoleCommand("saveTypes", SaveTypeData));
         }
 
         public override void StartCrawlerState()
@@ -86,7 +87,7 @@ namespace RogueCrawler
             Console.WriteLine("Successfully loaded character.");
         }
 
-        public void TestCommand(List<string> args)
+        public void PrintCharacters(List<string> args)
         {
             int tabCount = 0;
             staticBuilder.Clear();
@@ -99,6 +100,21 @@ namespace RogueCrawler
                     staticBuilder.NewlineAppend(tabCount, parts[parts.Length-2]);
             }
             Console.WriteLine(staticBuilder.ToString());
+        }
+
+        public void SaveTypeData(List<string> args)
+        {
+            MaterialTypeManager.GenerateDefaultTypes();
+            Console.WriteLine("Saved Material Data.");
+
+            WeaponTypeManager.GenerateDefaultTypes();
+            Console.WriteLine("Saved Weapon Data.");
+
+            ArmorTypeManager.GenerateDefaultTypes();
+            Console.WriteLine("Saved Armor Data.");
+
+            DamageTypeManager.GenerateDefaultTypes();
+            Console.WriteLine("Saved Damage Data.");
         }
         #endregion
     }
