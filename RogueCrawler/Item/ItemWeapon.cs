@@ -30,13 +30,15 @@ namespace RogueCrawler
         /// <summary>General Skill</summary>
         public string WeaponType { get; set; } // General Skill
 
-        public bool IsLargeWeapon { get; set; }
         public float BaseDamage { get; set; }
         public DamageTypeData DamageType { get; set; }
+        public ItemWeaponHandedness Handedness { get; set; }
 
         public AttributeType MajorAttribute { get; set; }
         public AttributeType MinorAttribute { get; set; }
         public CrawlerAttributeSet AttributeRequirements { get; set; }
+
+        public bool IsLargeWeapon => Handedness == ItemWeaponHandedness.Two;
 
         public float GetWeaponDamage()
             => Mathc.Truncate(BaseDamage * Material.DamageModifier * MathF.Log2(Quality + 1), 1);
@@ -134,9 +136,9 @@ namespace RogueCrawler
                 Condition = Condition,
                 MaxCondition = MaxCondition,
                 DamageType = DamageType.Name,
+                Handedness = Handedness,
 
                 WeaponType = WeaponType,
-                IsLargeWeapon = IsLargeWeapon,
             };
 
             return s;
@@ -186,9 +188,10 @@ namespace RogueCrawler
     class SerializedWeapon : SerializedItem
     {
         public float BaseDamage { get; set; }
-        public bool IsLargeWeapon { get; set; }
         public string WeaponType { get; set; }
         public string DamageType { get; set; }
+
+        public ItemWeaponHandedness Handedness { get; set; }
 
         public float Condition { get; set; } = 1;
         public float MaxCondition { get; set; } = 1;

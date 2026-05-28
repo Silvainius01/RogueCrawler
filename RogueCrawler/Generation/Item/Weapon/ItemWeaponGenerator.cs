@@ -1,9 +1,10 @@
 ﻿using CommandEngine;
 using System;
-using System.Linq;
-using System.Text;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace RogueCrawler
 {
@@ -22,6 +23,7 @@ namespace RogueCrawler
             else weaponType = wParams.PossibleWeaponTypes.RandomItem();
 
             WeaponTypeData weaponTypeData = WeaponTypes[weaponType];
+
             ItemWeapon weapon = new ItemWeapon()
             {
                 ID = NextId,
@@ -33,7 +35,6 @@ namespace RogueCrawler
                 WeaponType = weaponType,
                 BaseDamage = weaponTypeData.BaseDamage,
                 DamageType = DamageTypeManager.DamageTypes[weaponTypeData.DamageType],
-                IsLargeWeapon = IsLargeWeapon(weaponTypeData, wParams),
                 MajorAttribute = weaponTypeData.MajorAttribute,
                 MinorAttribute = weaponTypeData.MinorAttribute,
                 AttributeRequirements = new CrawlerAttributeSet(),
@@ -42,6 +43,12 @@ namespace RogueCrawler
             weapon.AttributeRequirements.SetAttribute(AttributeType.STR, (int)Math.Ceiling(weapon.Weight / DungeonSettings.WeaponWeightPerStr));
             weapon.ObjectName = GetWeaponName(weaponTypeData, weapon.IsLargeWeapon);
             weapon.ItemName = GetDisplayName(weapon);
+
+            if(weaponTypeData.SubTypes.TryFirst(std => std.TypeName == weapon.ObjectName, out var subType))
+            {
+                weapon.MinorAttribute = subType.MinorAttributeOverride;
+                weapon.Handedness = subType.WeaponHandedness;
+            }
 
             if (weapon.IsLargeWeapon)
             {
@@ -75,9 +82,9 @@ namespace RogueCrawler
                 WeaponType = weaponType,
                 BaseDamage = serialized.BaseDamage,
                 DamageType = DamageTypeManager.DamageTypes[serialized.DamageType],
-                IsLargeWeapon = serialized.IsLargeWeapon,
                 MinorAttribute = WeaponTypes[weaponType].MinorAttribute,
                 MajorAttribute = WeaponTypes[weaponType].MajorAttribute,
+                Handedness = serialized.Handedness,
             };
 
             return weapon;
@@ -85,7 +92,7 @@ namespace RogueCrawler
 
         public ItemWeapon GenerateUnarmed(Creature c)
         {
-            return new ItemWeapon()
+            ItemWeapon unarmedWeapon = new ItemWeapon()
             {
                 ID = -1,
                 BaseDamage = c.GetAttribute(AttributeType.STR),
@@ -96,11 +103,15 @@ namespace RogueCrawler
                 ObjectName = "Unarmed",
                 WeaponType = "Blunt",
                 ItemName = "Bare Fists",
-                IsLargeWeapon = false,
-                MajorAttribute = AttributeType.DEX,
-                MinorAttribute = AttributeType.STR,
+                Handedness = ItemWeaponHandedness.Both,
+                MajorAttribute = AttributeType.STR,
+                MinorAttribute = AttributeType.DEX,
                 Material = MaterialTypeManager.DefaultMaterial
             };
+
+            unarmedWeapon.Quality *= CreatureSkillUtility.GetWeaponSkillBonus(unarmedWeapon, c.Proficiencies);
+
+                return unarmedWeapon;
         }
 
         string GetWeaponName(WeaponTypeData typeData, bool isLarge)

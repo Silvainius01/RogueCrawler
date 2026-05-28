@@ -19,7 +19,7 @@ namespace RogueCrawler
         public float LargeWeaponWeightMult { get; set; } = 3;
         public string[] OneHandedWeaponNames { get; set; }
         public string[] TwoHandedWeaponNames { get; set; }
-        public WeaponSubTypeData[] SubTypes { get; set; }
+        public WeaponSubTypeData[] SubTypes { get; set; } = new WeaponSubTypeData[] { };
 
         public WeaponTypeData() { }
         public WeaponTypeData(string name)

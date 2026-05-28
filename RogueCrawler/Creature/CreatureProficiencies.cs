@@ -192,7 +192,7 @@ namespace RogueCrawler
         {
             int skillLevel = (int)
                 ((p.GetSkillLevel(weapon.ObjectName) * 0.75f) +
-                (p.GetSkillLevel(weapon.WeaponType) / 4.0f));
+                (p.GetSkillLevel(weapon.WeaponType) * 0.25f));
             return GetDefaultSkillBonus(skillLevel);
         }
         public static float GetArmorSkillBonus(ItemArmor armor, CreatureProficiencies p)

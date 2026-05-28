@@ -105,6 +105,14 @@ namespace RogueCrawler
                     LargeWeaponWeightMult = 4f,
                     OneHandedWeaponNames = new[] { "Club","Mace","Maul" },
                     TwoHandedWeaponNames = new[] { "WarHammer"},
+                    SubTypes = new[]
+                    {
+                        new WeaponSubTypeData("Unarmed")
+                        {
+                            MinorAttributeOverride = AttributeType.DEX,
+                            WeaponHandedness = ItemWeaponHandedness.Both,
+                        }
+                    }
                 },
                 new WeaponTypeData("Ranged")
                 {
@@ -133,6 +141,10 @@ namespace RogueCrawler
                     TwoHandedWeaponNames = new[] { "Shortbow","Longbow","Crossbow"},
                 },
             };
+
+            using StreamWriter writer = new StreamWriter(DataPath);
+            writer.Write(JsonConvert.SerializeObject(weaponTypes));
+            writer.Close();
         }
     }
 }
