@@ -115,6 +115,9 @@ namespace RogueCrawler
 
             DamageTypeManager.SaveDefaultTypes();
             Console.WriteLine("Saved Damage Data.");
+
+            CreatureSkillTypeManager.SaveDefaultTypes();
+            Console.WriteLine("Saved Skill Data.");
         }
         #endregion
     }

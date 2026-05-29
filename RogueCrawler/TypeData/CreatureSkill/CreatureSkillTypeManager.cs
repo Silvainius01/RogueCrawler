@@ -57,6 +57,7 @@ namespace RogueCrawler
                     FatigueMode = InfluenceMode.Linear,
 
                     SelfInfluence = 1.25f,
+                    SkillMode = InfluenceMode.Added,
 
                     ArmorCoverageInfluence = 0.0f,
                     ArmorCoverageMode = InfluenceMode.Linear,
@@ -105,11 +106,13 @@ namespace RogueCrawler
                     if (wtd.SubTypes.TryFirst(std => std.TypeName == typeName, out var subType))
                         t.LinkedAttributes.Add(new LinkedAttribute(subType.MinorAttributeOverride, DungeonSettings.WeaponMinorAttributeInfluence));
                     else t.LinkedAttributes.Add(new LinkedAttribute(wtd.MinorAttribute, DungeonSettings.WeaponMinorAttributeInfluence));
+
+                    skillTypes.Add(t);
                 }
             }
 
             // Sort by name
-            skillTypes.Sort((s1, s2) => s1.SkillName.CompareTo(s2.SkillName));
+            // skillTypes.Sort((s1, s2) => s1.SkillName.CompareTo(s2.SkillName));
             return skillTypes;
         }
 

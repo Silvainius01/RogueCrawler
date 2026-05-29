@@ -34,6 +34,7 @@ namespace RogueCrawler
             WeaponTypeManager.LoadTypes();
             ArmorTypeManager.LoadTypes();
             DamageTypeManager.LoadTypes();
+            CreatureSkillTypeManager.LoadTypes();
 
             stateManagers.Add(CrawlerState.Menu, new CrawlerMenuManager(this));
             stateManagers.Add(CrawlerState.Game, new CrawlerGameManager(this));
