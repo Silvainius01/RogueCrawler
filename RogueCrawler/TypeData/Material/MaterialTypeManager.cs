@@ -10,17 +10,22 @@ using System.Threading.Tasks;
 
 namespace RogueCrawler
 {
-    class MaterialTypeManager
+    class MaterialTypeManager : ITypeManager<MaterialTypeData>
     {
-        public static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\ItemMaterials.json";
+        static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\ItemMaterials.json";
+        static string ITypeManager<MaterialTypeData>.DataPath
+        {
+            get => DataPath;
+            set => throw new InvalidOperationException("Cannot change DataPath after initialization");
+        }
 
         public static bool Loaded = false;
         public static MaterialTypeData DefaultMaterial => Materials[DungeonConstants.MaterialIron];
-        public static Dictionary<string, MaterialTypeData> Materials = new Dictionary<string, MaterialTypeData>();
 
+        public static Dictionary<string, MaterialTypeData> Materials = new Dictionary<string, MaterialTypeData>();
         public static MappedCommandModule<MaterialTypeData> MaterialNameCommandModule;
 
-        public static void LoadMaterials()
+        public static void LoadTypes()
         {
             StreamReader reader = new StreamReader(DataPath);
             string json = reader.ReadToEnd();
@@ -84,7 +89,7 @@ namespace RogueCrawler
             return true;
         }
 
-        public static void GenerateDefaultTypes()
+        public static List<MaterialTypeData> GetDefaultTypes()
         {
             List<MaterialTypeData> materials = new List<MaterialTypeData>(16)
             {
@@ -166,8 +171,13 @@ namespace RogueCrawler
                 },
             };
 
+            return materials;
+        }
+
+        public static void SaveDefaultTypes()
+        {
             using StreamWriter writer = new StreamWriter(DataPath);
-            writer.Write(JsonConvert.SerializeObject(materials));
+            writer.Write(JsonConvert.SerializeObject(GetDefaultTypes()));
             writer.Close();
         }
     }

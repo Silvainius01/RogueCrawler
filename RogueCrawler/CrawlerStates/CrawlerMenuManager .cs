@@ -104,16 +104,16 @@ namespace RogueCrawler
 
         public void SaveTypeData(List<string> args)
         {
-            MaterialTypeManager.GenerateDefaultTypes();
+            MaterialTypeManager.SaveDefaultTypes();
             Console.WriteLine("Saved Material Data.");
 
-            WeaponTypeManager.GenerateDefaultTypes();
+            WeaponTypeManager.SaveDefaultTypes();
             Console.WriteLine("Saved Weapon Data.");
 
-            ArmorTypeManager.GenerateDefaultTypes();
+            ArmorTypeManager.SaveDefaultTypes();
             Console.WriteLine("Saved Armor Data.");
 
-            DamageTypeManager.GenerateDefaultTypes();
+            DamageTypeManager.SaveDefaultTypes();
             Console.WriteLine("Saved Damage Data.");
         }
         #endregion

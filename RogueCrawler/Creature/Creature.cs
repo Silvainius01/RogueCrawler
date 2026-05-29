@@ -150,6 +150,10 @@ namespace RogueCrawler
         public float GetCombatDamage()
         {
             float damage = GetWeaponDamage(GetCombatWeapon());
+            float fatigueMult = Fatigue.Percent + DungeonSettings.WeaponDamageFatigueInfluence;
+            
+            if(fatigueMult < 1f)
+                damage *= fatigueMult;
 
             return damage;
         }
@@ -158,8 +162,8 @@ namespace RogueCrawler
             float damage = weapon.GetWeaponDamage();
             float skillBonus = 1 + CreatureSkillUtility.GetWeaponSkillBonus(weapon, Proficiencies);
             float attrMult = 1.0f / (
-                GetAttributePercent(weapon.MajorAttribute) * 0.75f +
-                GetAttributePercent(weapon.MinorAttribute) * 0.25f);
+                GetAttributePercent(weapon.MajorAttribute) * DungeonSettings.WeaponMajorAttributeFatigueInfluence +
+                GetAttributePercent(weapon.MinorAttribute) * DungeonSettings.WeaponMinorAttributeFatigueInfluence);
 
             return damage * skillBonus * attrMult;
         }
@@ -175,15 +179,15 @@ namespace RogueCrawler
             float chance = 0.01f;
             chance *= Proficiencies.GetSkillLevel(weapon.WeaponType) / 2 + Proficiencies.GetSkillLevel(weapon.ObjectName);
             chance *= GetAttributePercent(weapon.MajorAttribute) + (GetAttributePercent(weapon.MinorAttribute) / 2);
-            chance *= 0.5f + Fatigue.Percent;
+            chance *= Fatigue.Percent + DungeonSettings.HitChanceFatigueInfluence;
             return chance;
         }
         public float GetCombatEvasion()
         {
             float chance = 0.01f;
-            chance *= (Proficiencies.GetSkillLevel(DungeonConstants.CreatureSkillEvasion) / 4 * 3) + (Proficiencies.GetSkillLevel(DungeonConstants.ArmorClassUnarmored) / 4);
+            chance *= (Proficiencies.GetSkillLevel(DungeonConstants.CreatureSkillEvasion) * 0.75f) + (Proficiencies.GetSkillLevel(DungeonConstants.ArmorClassUnarmored) * 0.25f);
             chance *= GetAttributePercent(AttributeType.DEX) + (GetAttributePercent(AttributeType.WIL) / 2);
-            chance *= 0.25f + Fatigue.Percent;
+            chance *= Fatigue.Percent + DungeonSettings.EvasionFatigueInfluence;
             return chance;
         }
         public float GetAttackFatigueCost()

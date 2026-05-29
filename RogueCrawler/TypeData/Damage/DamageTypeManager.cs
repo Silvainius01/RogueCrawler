@@ -10,9 +10,14 @@ using System.Threading.Tasks;
 
 namespace RogueCrawler
 {
-    internal class DamageTypeManager
+    internal class DamageTypeManager : ITypeManager<DamageTypeData>
     {
-        public static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\DamageTypes.json";
+        static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\DamageTypes.json";
+        static string ITypeManager<DamageTypeData>.DataPath
+        {
+            get => DataPath;
+            set => throw new InvalidOperationException("Cannot change DataPath after initialization");
+        }
 
         public static bool Loaded = false;
         public static Dictionary<string, DamageTypeData> DamageTypes = new Dictionary<string, DamageTypeData>();
@@ -22,7 +27,7 @@ namespace RogueCrawler
         public static DamageTypeData MagicalDamage => DamageTypes[DungeonConstants.DamageTypeArcane];
         public static DamageTypeData DivineDamage => DamageTypes[DungeonConstants.DamageTypeDivine];
 
-        public static void LoadDamageTypes()
+        public static void LoadTypes()
         {
             StreamReader reader = new StreamReader(DataPath);
             string json = reader.ReadToEnd();
@@ -43,9 +48,9 @@ namespace RogueCrawler
             // MaterialNameCommandModule = new MappedCommandModule<ItemMaterial>("What is the default material name prompt??", Materials);
         }
 
-        public static void GenerateDefaultTypes()
+        public static List<DamageTypeData> GetDefaultTypes()
         {
-            List<DamageTypeData> types = new List<DamageTypeData>(16)
+            List<DamageTypeData> damageTypes = new List<DamageTypeData>(16)
             {
                 new DamageTypeData(DungeonConstants.DamageTypeTrue)
                 {
@@ -107,8 +112,13 @@ namespace RogueCrawler
                 },
             };
 
+            return damageTypes;
+        }
+
+        public static void SaveDefaultTypes()
+        {
             using StreamWriter writer = new StreamWriter(DataPath);
-            writer.Write(JsonConvert.SerializeObject(types));
+            writer.Write(JsonConvert.SerializeObject(GetDefaultTypes()));
             writer.Close();
         }
     }

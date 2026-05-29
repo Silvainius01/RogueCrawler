@@ -119,6 +119,15 @@ namespace RogueCrawler
 
         public const float WeaponMajorAttributeDamageInfluence = 0f;
         public const float WepaonMinorAttributeDamageInfluence = 0f;
+
+        /// <summary>
+        /// Defines two quantities:
+        /// <para> - At what percentage of fatigue it starts impacting your damage </para>
+        /// <para> - How quickly your damage suffers past that threshold. </para>
+        /// </summary>
+        public const float WeaponDamageFatigueInfluence = 0.5f;
+        public const float HitChanceFatigueInfluence = 0.5f;
+        public const float EvasionFatigueInfluence = 0.25f;
         #endregion
     }
 }

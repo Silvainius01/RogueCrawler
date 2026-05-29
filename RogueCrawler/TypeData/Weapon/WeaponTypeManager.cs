@@ -5,12 +5,18 @@ using CommandEngine;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace RogueCrawler
 {
-    class WeaponTypeManager
+    class WeaponTypeManager : ITypeManager<WeaponTypeData>
     {
-        public static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\WeaponTypes.json";
+        static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\WeaponTypes.json";
+        static string ITypeManager<WeaponTypeData>.DataPath
+        { 
+            get => DataPath; 
+            set => throw new InvalidOperationException("Cannot change DataPath after initialization");
+        }
 
         public static bool TypesLoaded = false;
         public static Dictionary<string, WeaponTypeData> WeaponTypes = new Dictionary<string, WeaponTypeData>();
@@ -30,9 +36,10 @@ namespace RogueCrawler
             }
         }
 
+
         public static MappedCommandModule<WeaponTypeData> WeaponTypeCommandModule;
 
-        public static void LoadWeaponTypes()
+        public static void LoadTypes()
         {
             StreamReader reader = new StreamReader(DataPath);
             string json = reader.ReadToEnd();
@@ -50,7 +57,7 @@ namespace RogueCrawler
             WeaponTypeCommandModule = new MappedCommandModule<WeaponTypeData>("What is the default weapon type prompt??", WeaponTypes);
         }
 
-        public static void GenerateDefaultTypes()
+        public static List<WeaponTypeData> GetDefaultTypes()
         {
             List<WeaponTypeData> weaponTypes = new List<WeaponTypeData>()
             {
@@ -142,8 +149,13 @@ namespace RogueCrawler
                 },
             };
 
+            return weaponTypes;
+        }
+
+        public static void SaveDefaultTypes()
+        {
             using StreamWriter writer = new StreamWriter(DataPath);
-            writer.Write(JsonConvert.SerializeObject(weaponTypes));
+            writer.Write(JsonConvert.SerializeObject(GetDefaultTypes()));
             writer.Close();
         }
     }

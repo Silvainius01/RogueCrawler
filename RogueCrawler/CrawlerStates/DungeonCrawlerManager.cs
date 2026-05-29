@@ -30,10 +30,10 @@ namespace RogueCrawler
                 Directory.CreateDirectory(SavePath);
 
             Instance = this;
-            MaterialTypeManager.LoadMaterials();
-            WeaponTypeManager.LoadWeaponTypes();
-            ArmorTypeManager.LoadArmorTypes();
-            DamageTypeManager.LoadDamageTypes();
+            MaterialTypeManager.LoadTypes();
+            WeaponTypeManager.LoadTypes();
+            ArmorTypeManager.LoadTypes();
+            DamageTypeManager.LoadTypes();
 
             stateManagers.Add(CrawlerState.Menu, new CrawlerMenuManager(this));
             stateManagers.Add(CrawlerState.Game, new CrawlerGameManager(this));

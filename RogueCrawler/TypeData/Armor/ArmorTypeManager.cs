@@ -1,17 +1,24 @@
 ﻿using CommandEngine;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using System.Linq;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace RogueCrawler
 {
-    class ArmorTypeManager
+    class ArmorTypeManager : ITypeManager<ArmorTypeData>
     {
         public static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\ArmorTypes.json";
+        static string ITypeManager<ArmorTypeData>.DataPath
+        {
+            get => DataPath;
+            set => throw new InvalidOperationException("Cannot change DataPath after initialization");
+        }
 
         public static bool TypesLoaded = false;
         public static Dictionary<string, ArmorTypeData> ArmorTypes = new Dictionary<string, ArmorTypeData>();
@@ -19,7 +26,7 @@ namespace RogueCrawler
 
         public static MappedCommandModule<ArmorTypeData> ArmorTypeCommandModule;
 
-        public static void LoadArmorTypes()
+        public static void LoadTypes()
         {
             StreamReader reader = new StreamReader(DataPath);
             string json = reader.ReadToEnd();
@@ -41,7 +48,7 @@ namespace RogueCrawler
             ArmorTypeCommandModule = new MappedCommandModule<ArmorTypeData>("What is the default armor type prompt??", ArmorTypes);
         }
 
-        public static void GenerateDefaultTypes()
+        public static List<ArmorTypeData> GetDefaultTypes()
         {
             List<ArmorTypeData> armorTypes = new List<ArmorTypeData>()
             {
@@ -217,8 +224,13 @@ namespace RogueCrawler
                 },
             };
 
+            return armorTypes;
+        }
+
+        public static void SaveDefaultTypes()
+        {
             using StreamWriter writer = new StreamWriter(DataPath);
-            writer.Write(JsonConvert.SerializeObject(armorTypes));
+            writer.Write(JsonConvert.SerializeObject(GetDefaultTypes()));
             writer.Close();
         }
     }
