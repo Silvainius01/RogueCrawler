@@ -41,17 +41,17 @@ namespace RogueCrawler
         public List<string> ExemptArmorClasses { get; set; } = new List<string>();
         public List<LinkedSkill> LinkedSkills { get; set; } = new List<LinkedSkill>();
         public List<LinkedAttribute> LinkedAttributes { get; set; } = new List<LinkedAttribute>();
-        
+
         public CreatureSkillTypeData(string name) { SkillName = name; }
 
 
-        public float GetSkillInfluence(CreatureProficiencies c)
+        public float GetSkillInfluence(CreatureProficiencies c, bool normalizeAgainstMax = true)
         {
             float retval = 0.0f;
-            Comparison<LinkedSkill> comparison = (s1, s2) => 
+            Comparison<LinkedSkill> comparison = (s1, s2) =>
                 c.GetSkillLevel(s1.SkillName).CompareTo(c.GetSkillLevel(s2.SkillName));
 
-            switch(SkillMode)
+            switch (SkillMode)
             {
                 case InfluenceMode.None:
                     return 1.0f;
@@ -87,7 +87,9 @@ namespace RogueCrawler
                     return 1.0f;
             }
 
-            return retval / DungeonSettings.MaxSkillLevel;
+            if (normalizeAgainstMax)
+                return retval / DungeonSettings.MaxSkillLevel;
+            return retval;
         }
 
         public float GetAttributeInfluence(Creature c)

@@ -26,7 +26,7 @@ namespace RogueCrawler
 
         public static void LoadTypes()
         {
-            if(Loaded) 
+            if (Loaded)
                 return;
 
             StreamReader reader = new StreamReader(DataPath);
@@ -74,8 +74,42 @@ namespace RogueCrawler
                         new LinkedAttribute(AttributeType.AGI, 0.5f),
                     },
                 }
+                // ADD ARMOR SKILLS
             };
 
+            // Generate weapon skills
+            IEnumerable<WeaponTypeData> weaponTypes = WeaponTypeManager.TypesLoaded
+                ? WeaponTypeManager.WeaponTypes.Values
+                : WeaponTypeManager.GetDefaultTypes();
+            foreach (WeaponTypeData wtd in weaponTypes)
+            {
+                foreach (string typeName in wtd.OneHandedWeaponNames.Concat(wtd.TwoHandedWeaponNames))
+                {
+                    var t = new CreatureSkillTypeData(typeName)
+                    {
+                        SkillMode = InfluenceMode.Normalized,
+                        SelfInfluence = DungeonSettings.WeaponSpecificSkillInfluence,
+                        LinkedSkills = new List<LinkedSkill>()
+                        {
+                            new LinkedSkill(wtd.WeaponType, DungeonSettings.WeaponGeneralSkillInfluence),
+                        },
+
+                        AttributeMode = InfluenceMode.Normalized,
+                        LinkedAttributes = new List<LinkedAttribute>()
+                        {
+                            new LinkedAttribute(wtd.MajorAttribute, DungeonSettings.WeaponMajorAttributeInfluence),
+                        }
+                    };
+
+                    // Add the minor attribute of the subtype if applicable.
+                    if (wtd.SubTypes.TryFirst(std => std.TypeName == typeName, out var subType))
+                        t.LinkedAttributes.Add(new LinkedAttribute(subType.MinorAttributeOverride, DungeonSettings.WeaponMinorAttributeInfluence));
+                    else t.LinkedAttributes.Add(new LinkedAttribute(wtd.MinorAttribute, DungeonSettings.WeaponMinorAttributeInfluence));
+                }
+            }
+
+            // Sort by name
+            skillTypes.Sort((s1, s2) => s1.SkillName.CompareTo(s2.SkillName));
             return skillTypes;
         }
 

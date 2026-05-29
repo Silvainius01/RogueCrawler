@@ -160,10 +160,18 @@ namespace RogueCrawler
         public float GetWeaponDamage(ItemWeapon weapon)
         {
             float damage = weapon.GetWeaponDamage();
+
+            if(CreatureSkillTypeManager.SkillData.TryGetValue(weapon.ObjectName, out var skillData))
+            {
+                float mSkill = 1 + CreatureSkillUtility.GetWeaponSkillBonus(skillData, Proficiencies);
+                float mAttr = Math.Min(1.0f, skillData.GetAttributeInfluence(this));
+                return damage * mSkill * mAttr;
+            }
+
             float skillBonus = 1 + CreatureSkillUtility.GetWeaponSkillBonus(weapon, Proficiencies);
-            float attrMult = 1.0f / (
-                GetAttributePercent(weapon.MajorAttribute) * DungeonSettings.WeaponMajorAttributeFatigueInfluence +
-                GetAttributePercent(weapon.MinorAttribute) * DungeonSettings.WeaponMinorAttributeFatigueInfluence);
+            float attrMult = Math.Min(1.0f,
+                GetAttributePercent(weapon.MajorAttribute) * DungeonSettings.WeaponMajorAttributeDamageInfluence +
+                GetAttributePercent(weapon.MinorAttribute) * DungeonSettings.WeaponMinorAttributeDamageInfluence);
 
             return damage * skillBonus * attrMult;
         }
@@ -192,8 +200,6 @@ namespace RogueCrawler
                 float mFatigue = skillData.GetFatigueInfluence(this);
                 return mSkills * mCoverage * mAttrs * mFatigue;
             }
-
-
 
             float chance = 0.01f;
             chance *= (Proficiencies.GetSkillLevel(DungeonConstants.CreatureSkillEvasion) * 0.75f) + (Proficiencies.GetSkillLevel(DungeonConstants.ArmorClassUnarmored) * 0.25f);

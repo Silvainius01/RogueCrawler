@@ -49,6 +49,9 @@ namespace RogueCrawler
         public const float MaxUnarmoredSkillRating = 5.0f;
 
         public const int ArmorExpPerMove = 1;
+
+        public const float WeaponGeneralSkillInfluence = 1.0f / 4.0f;
+        public const float WeaponSpecificSkillInfluence = 1.0f - WeaponGeneralSkillInfluence;
         #endregion
 
         #region Global Generation Settings
@@ -113,12 +116,15 @@ namespace RogueCrawler
         #endregion
 
         #region Combat Settings
-        /// <summary> How much afflictions can affect how much fatigue is consumed when swinging a weapon </summary>
-        public const float WeaponMajorAttributeFatigueInfluence = 3f / 4f;
-        public const float WeaponMinorAttributeFatigueInfluence = 1 - WeaponMajorAttributeFatigueInfluence;
+        /// <summary> How much afflictions can affect the amount of fatigue consumed when swinging a weapon </summary>
+        public const float WeaponMajorAttributeFatigueInfluence = 3.0f / 4.0f;
+        public const float WeaponMinorAttributeFatigueInfluence = 1.0f - WeaponMajorAttributeFatigueInfluence;
 
-        public const float WeaponMajorAttributeDamageInfluence = 0f;
-        public const float WepaonMinorAttributeDamageInfluence = 0f;
+        public const float WeaponMajorAttributeDamageInfluence = 3.0f / 4.0f;
+        public const float WeaponMinorAttributeDamageInfluence = 1.0f - WeaponMajorAttributeFatigueInfluence;
+
+        public const float WeaponMajorAttributeInfluence = 3.0f / 4.0f;
+        public const float WeaponMinorAttributeInfluence = 1.0f - WeaponMajorAttributeFatigueInfluence;
 
         /// <summary>
         /// Defines two quantities:
