@@ -181,7 +181,7 @@ namespace RogueCrawler
         public float GetCombatEvasion()
         {
             float chance = 0.01f;
-            chance *= (Proficiencies.GetSkillLevel(CreatureSkill.Evasion) / 4 * 3) + (Proficiencies.GetSkillLevel(CreatureSkill.Unarmored) / 4);
+            chance *= (Proficiencies.GetSkillLevel(DungeonConstants.CreatureSkillEvasion) / 4 * 3) + (Proficiencies.GetSkillLevel(DungeonConstants.ArmorClassUnarmored) / 4);
             chance *= GetAttributePercent(AttributeType.DEX) + (GetAttributePercent(AttributeType.WIL) / 2);
             chance *= 0.25f + Fatigue.Percent;
             return chance;

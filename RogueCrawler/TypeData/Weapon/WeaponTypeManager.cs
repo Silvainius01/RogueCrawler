@@ -54,9 +54,9 @@ namespace RogueCrawler
         {
             List<WeaponTypeData> weaponTypes = new List<WeaponTypeData>()
             {
-                new WeaponTypeData("Axe")
+                new WeaponTypeData(DungeonConstants.WeaponSkillAxes)
                 {
-                    DamageType = "Slash",
+                    DamageType = DungeonConstants.DamageTypeSlash,
                     MajorAttribute = AttributeType.STR,
                     MinorAttribute = AttributeType.DEX,
                     Handedness = ItemWeaponHandedness.Both,
@@ -67,9 +67,9 @@ namespace RogueCrawler
                     OneHandedWeaponNames = new[] { "WarAxe","Tomahawk","Ono" },
                     TwoHandedWeaponNames = new[] { "BattleAxe","Panabas","Tabar"},
                 },
-                new WeaponTypeData("Blade")
+                new WeaponTypeData(DungeonConstants.WeaponSkillBlades)
                 {
-                    DamageType = "Slash",
+                    DamageType = DungeonConstants.DamageTypeSlash,
                     MajorAttribute = AttributeType.AGI,
                     MinorAttribute = AttributeType.STR,
                     Handedness = ItemWeaponHandedness.Both,
@@ -77,25 +77,25 @@ namespace RogueCrawler
                     BaseValue = 5,
                     LargeWeaponDamageMult = 2f,
                     LargeWeaponWeightMult = 3f,
-                    OneHandedWeaponNames = new[] { "Longsword","Shortsword","Dagger" },
+                    OneHandedWeaponNames = new[] { "Longsword", DungeonConstants.WeaponSkillShortsword, DungeonConstants.WeaponSkillDaggers },
                     TwoHandedWeaponNames = new[] { "Claymore","Katana","Zweihander"},
                     SubTypes = new[]
                     {
-                        new WeaponSubTypeData("Dagger")
+                        new WeaponSubTypeData(DungeonConstants.WeaponSkillDaggers)
                         {
                             MinorAttributeOverride = AttributeType.DEX,
                             WeaponHandedness = ItemWeaponHandedness.One,
                         },
-                        new WeaponSubTypeData("Shortsword")
+                        new WeaponSubTypeData(DungeonConstants.WeaponSkillShortsword)
                         {
                             MinorAttributeOverride = AttributeType.DEX,
                             WeaponHandedness = ItemWeaponHandedness.One,
                         }
                     }
                 },
-                new WeaponTypeData("Blunt")
+                new WeaponTypeData(DungeonConstants.WeaponSkillBlunt)
                 {
-                    DamageType = "Blunt",
+                    DamageType = DungeonConstants.DamageTypeBlunt,
                     MajorAttribute = AttributeType.STR,
                     MinorAttribute = AttributeType.CON,
                     Handedness = ItemWeaponHandedness.Both,
@@ -103,20 +103,20 @@ namespace RogueCrawler
                     BaseValue = 5,
                     LargeWeaponDamageMult = 3f,
                     LargeWeaponWeightMult = 4f,
-                    OneHandedWeaponNames = new[] { "Club","Mace","Maul" },
+                    OneHandedWeaponNames = new[] { "Club","Mace", "Maul" },
                     TwoHandedWeaponNames = new[] { "WarHammer"},
                     SubTypes = new[]
                     {
-                        new WeaponSubTypeData("Unarmed")
+                        new WeaponSubTypeData(DungeonConstants.WeaponSkillUnarmed)
                         {
                             MinorAttributeOverride = AttributeType.DEX,
                             WeaponHandedness = ItemWeaponHandedness.Both,
                         }
                     }
                 },
-                new WeaponTypeData("Ranged")
+                new WeaponTypeData(DungeonConstants.WeaponSkillRanged)
                 {
-                    DamageType = "Pierce",
+                    DamageType = DungeonConstants.DamageTypePierce,
                     MajorAttribute = AttributeType.AGI,
                     MinorAttribute = AttributeType.DEX,
                     Handedness = ItemWeaponHandedness.Two,
@@ -127,9 +127,9 @@ namespace RogueCrawler
                     OneHandedWeaponNames = new[] { "Sling","Kunai" },
                     TwoHandedWeaponNames = new[] { "Shortbow","Longbow","Crossbow"},
                 },
-                new WeaponTypeData("Spear")
+                new WeaponTypeData(DungeonConstants.WeaponSkillSpears)
                 {
-                    DamageType = "Pierce",
+                    DamageType = DungeonConstants.DamageTypePierce,
                     MajorAttribute = AttributeType.DEX,
                     MinorAttribute = AttributeType.CON,
                     Handedness = ItemWeaponHandedness.Two,
@@ -137,8 +137,8 @@ namespace RogueCrawler
                     BaseValue = 5,
                     LargeWeaponDamageMult = 3f,
                     LargeWeaponWeightMult = 4f,
-                    OneHandedWeaponNames = new[] { "Sling","Kunai" },
-                    TwoHandedWeaponNames = new[] { "Shortbow","Longbow","Crossbow"},
+                    OneHandedWeaponNames = new[] { "Spear" },
+                    TwoHandedWeaponNames = new[] { "Halberd","Polearm","Pike"},
                 },
             };
 

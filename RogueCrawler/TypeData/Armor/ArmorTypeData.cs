@@ -21,5 +21,10 @@ namespace RogueCrawler
         {
             return $"{ArmorClass} {ArmorSlot} {ArmorType}";
         }
+
+        public ArmorTypeData() { }
+        public ArmorTypeData(string name) { ArmorType = name; }
+        public ArmorTypeData(string name, string armorClass) { ArmorType = name; ArmorClass = armorClass; }
+        public ArmorTypeData(string name, string armorClass, ArmorSlotType slot) { ArmorType = name; ArmorClass = armorClass; ArmorSlot = slot; }
     }
 }

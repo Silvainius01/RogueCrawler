@@ -11,11 +11,6 @@ namespace RogueCrawler
 {
     class CreatureSkill
     {
-        #region Skill Name Constants
-        public static string Evasion = "Evasion";
-        public static string Unarmored = "Unarmored";
-        #endregion
-
         public int Level { get; set; }
         public int Experience { get; set; }
         public string Name { get; set; }

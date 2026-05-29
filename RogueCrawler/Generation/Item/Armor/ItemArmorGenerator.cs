@@ -55,7 +55,7 @@ namespace RogueCrawler
                 BaseValue = 0,
                 Weight = 0,
                 Quality = 1,
-                Material = MaterialTypeManager.Materials["Leather"],
+                Material = MaterialTypeManager.Materials[DungeonConstants.MaterialLeather],
                 ItemName = $"Bare {slotName}",
                 ObjectName = $"Bare{slotName}",
                 ArmorClass = DungeonConstants.ArmorClassUnarmored,

@@ -16,7 +16,7 @@ namespace RogueCrawler
         public static bool TypesLoaded = false;
         public static Dictionary<string, ArmorTypeData> ArmorTypes = new Dictionary<string, ArmorTypeData>();
         public static Dictionary<string, List<ArmorTypeData>> ArmorByClass = new Dictionary<string, List<ArmorTypeData>>();
-        
+
         public static MappedCommandModule<ArmorTypeData> ArmorTypeCommandModule;
 
         public static void LoadArmorTypes()
@@ -33,7 +33,7 @@ namespace RogueCrawler
                 ArmorTypeData data = (ArmorTypeData)serializer.Deserialize(new JTokenReader(obj), typeof(ArmorTypeData));
                 ArmorTypes.Add(data.ArmorType, data);
 
-                if(ArmorByClass.ContainsKey(data.ArmorClass))
+                if (ArmorByClass.ContainsKey(data.ArmorClass))
                     ArmorByClass[data.ArmorClass].Add(data);
                 else ArmorByClass.Add(data.ArmorClass, new List<ArmorTypeData> { data });
             }
@@ -48,17 +48,17 @@ namespace RogueCrawler
                 new ArmorTypeData()
                 {
                     ArmorType = "Cap",
-                    ArmorClass = "Light",
+                    ArmorClass = DungeonConstants.ArmorClassLight,
                     ArmorSlot = ArmorSlotType.Head,
                     BaseValue = 1,
                     BaseArmorRating = 1,
                     AllowAnyMetal = true,
-                    AllowedMaterials = new []{ "Leather" },
+                    AllowedMaterials = new []{ DungeonConstants.MaterialLeather },
                 },
                 new ArmorTypeData()
                 {
                     ArmorType = "Coif",
-                    ArmorClass = "Medium",
+                    ArmorClass = DungeonConstants.ArmorClassMedium,
                     ArmorSlot = ArmorSlotType.Head,
                     BaseValue = 1,
                     BaseArmorRating = 1,
@@ -67,7 +67,7 @@ namespace RogueCrawler
                 new ArmorTypeData()
                 {
                     ArmorType = "Helmet",
-                    ArmorClass = "Heavy",
+                    ArmorClass = DungeonConstants.ArmorClassHeavy,
                     ArmorSlot = ArmorSlotType.Head,
                     BaseValue = 1,
                     BaseArmorRating = 1,
@@ -76,27 +76,27 @@ namespace RogueCrawler
                 new ArmorTypeData()
                 {
                     ArmorType = "Jacket",
-                    ArmorClass = "Light",
+                    ArmorClass = DungeonConstants.ArmorClassLight,
                     ArmorSlot = ArmorSlotType.Chest,
                     BaseValue = 1,
                     BaseArmorRating = 1,
                     AllowAnyMetal = true,
-                    AllowedMaterials = new []{ "Leather" },
+                    AllowedMaterials = new []{ DungeonConstants.MaterialLeather },
                 },
                 new ArmorTypeData()
                 {
                     ArmorType = "Brigandine",
-                    ArmorClass = "Medium",
+                    ArmorClass = DungeonConstants.ArmorClassMedium,
                     ArmorSlot = ArmorSlotType.Chest,
                     BaseValue = 1,
                     BaseArmorRating = 1,
                     AllowAnyMetal = true,
-                    AllowedMaterials = new []{ "Leather" },
+                    AllowedMaterials = new []{ DungeonConstants.MaterialLeather },
                 },
                 new ArmorTypeData()
                 {
                     ArmorType = "Cuirass",
-                    ArmorClass = "Heavy",
+                    ArmorClass = DungeonConstants.ArmorClassHeavy,
                     ArmorSlot = ArmorSlotType.Chest,
                     BaseValue = 1,
                     BaseArmorRating = 1,
@@ -105,17 +105,17 @@ namespace RogueCrawler
                 new ArmorTypeData()
                 {
                     ArmorType = "Sleeves",
-                    ArmorClass = "Light",
+                    ArmorClass = DungeonConstants.ArmorClassLight,
                     ArmorSlot = ArmorSlotType.Arm,
                     BaseValue = 1,
                     BaseArmorRating = 1,
                     AllowAnyMetal = true,
-                    AllowedMaterials = new []{ "Leather" },
+                    AllowedMaterials = new []{ DungeonConstants.MaterialLeather },
                 },
                 new ArmorTypeData()
                 {
                     ArmorType = "Vambrace",
-                    ArmorClass = "Medium",
+                    ArmorClass = DungeonConstants.ArmorClassMedium,
                     ArmorSlot = ArmorSlotType.Arm,
                     BaseValue = 1,
                     BaseArmorRating = 1,
@@ -124,7 +124,7 @@ namespace RogueCrawler
                 new ArmorTypeData()
                 {
                     ArmorType = "Pauldrons",
-                    ArmorClass = "Heavy",
+                    ArmorClass = DungeonConstants.ArmorClassHeavy,
                     ArmorSlot = ArmorSlotType.Arm,
                     BaseValue = 1,
                     BaseArmorRating = 1,
@@ -133,17 +133,17 @@ namespace RogueCrawler
                 new ArmorTypeData()
                 {
                     ArmorType = "Gloves",
-                    ArmorClass = "Light",
+                    ArmorClass = DungeonConstants.ArmorClassLight,
                     ArmorSlot = ArmorSlotType.Hand,
                     BaseValue = 1,
                     BaseArmorRating = 1,
                     AllowAnyMetal = true,
-                    AllowedMaterials = new []{ "Leather" },
+                    AllowedMaterials = new []{ DungeonConstants.MaterialLeather },
                 },
                 new ArmorTypeData()
                 {
                     ArmorType = "Bracers",
-                    ArmorClass = "Medium",
+                    ArmorClass = DungeonConstants.ArmorClassMedium,
                     ArmorSlot = ArmorSlotType.Hand,
                     BaseValue = 1,
                     BaseArmorRating = 1,
@@ -152,7 +152,7 @@ namespace RogueCrawler
                 new ArmorTypeData()
                 {
                     ArmorType = "Gauntlets",
-                    ArmorClass = "Heavy",
+                    ArmorClass = DungeonConstants.ArmorClassHeavy,
                     ArmorSlot = ArmorSlotType.Hand,
                     BaseValue = 1,
                     BaseArmorRating = 1,
@@ -161,17 +161,17 @@ namespace RogueCrawler
                 new ArmorTypeData()
                 {
                     ArmorType = "Pants",
-                    ArmorClass = "Light",
+                    ArmorClass = DungeonConstants.ArmorClassLight,
                     ArmorSlot = ArmorSlotType.Waist,
                     BaseValue = 1,
                     BaseArmorRating = 1,
                     AllowAnyMetal = true,
-                    AllowedMaterials = new []{ "Leather" },
+                    AllowedMaterials = new []{ DungeonConstants.MaterialLeather },
                 },
                 new ArmorTypeData()
                 {
                     ArmorType = "Cuisses",
-                    ArmorClass = "Medium",
+                    ArmorClass = DungeonConstants.ArmorClassMedium,
                     ArmorSlot = ArmorSlotType.Waist,
                     BaseValue = 1,
                     BaseArmorRating = 1,
@@ -180,7 +180,7 @@ namespace RogueCrawler
                 new ArmorTypeData()
                 {
                     ArmorType = "Greaves",
-                    ArmorClass = "Heavy",
+                    ArmorClass = DungeonConstants.ArmorClassHeavy,
                     ArmorSlot = ArmorSlotType.Waist,
                     BaseValue = 1,
                     BaseArmorRating = 1,
@@ -189,27 +189,27 @@ namespace RogueCrawler
                 new ArmorTypeData()
                 {
                     ArmorType = "Shoes",
-                    ArmorClass = "Light",
+                    ArmorClass = DungeonConstants.ArmorClassLight,
                     ArmorSlot = ArmorSlotType.Foot,
                     BaseValue = 1,
                     BaseArmorRating = 1,
                     AllowAnyMetal = true,
-                    AllowedMaterials = new []{ "Leather" },
+                    AllowedMaterials = new []{ DungeonConstants.MaterialLeather },
                 },
                 new ArmorTypeData()
                 {
                     ArmorType = "Boots",
-                    ArmorClass = "Medium",
+                    ArmorClass = DungeonConstants.ArmorClassMedium,
                     ArmorSlot = ArmorSlotType.Foot,
                     BaseValue = 1,
                     BaseArmorRating = 1,
                     AllowAnyMetal = true,
-                    AllowedMaterials = new []{ "Leather" },
+                    AllowedMaterials = new []{ DungeonConstants.MaterialLeather },
                 },
                 new ArmorTypeData()
                 {
                     ArmorType = "Sabatons",
-                    ArmorClass = "Heavy",
+                    ArmorClass = DungeonConstants.ArmorClassHeavy,
                     ArmorSlot = ArmorSlotType.Foot,
                     BaseValue = 1,
                     BaseArmorRating = 1,

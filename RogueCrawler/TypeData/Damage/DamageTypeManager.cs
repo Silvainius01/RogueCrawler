@@ -17,10 +17,10 @@ namespace RogueCrawler
         public static bool Loaded = false;
         public static Dictionary<string, DamageTypeData> DamageTypes = new Dictionary<string, DamageTypeData>();
 
-        public static DamageTypeData TrueDamage => DamageTypes["True"];
-        public static DamageTypeData PhysicalDamage => DamageTypes["Blunt"];
-        public static DamageTypeData MagicalDamage => DamageTypes["Arcane"];
-        public static DamageTypeData DivineDamage => DamageTypes["Divine"];
+        public static DamageTypeData TrueDamage => DamageTypes[DungeonConstants.DamageTypeTrue];
+        public static DamageTypeData PhysicalDamage => DamageTypes[DungeonConstants.DamageTypeBlunt];
+        public static DamageTypeData MagicalDamage => DamageTypes[DungeonConstants.DamageTypeArcane];
+        public static DamageTypeData DivineDamage => DamageTypes[DungeonConstants.DamageTypeDivine];
 
         public static void LoadDamageTypes()
         {
@@ -47,60 +47,60 @@ namespace RogueCrawler
         {
             List<DamageTypeData> types = new List<DamageTypeData>(16)
             {
-                new DamageTypeData("True")
+                new DamageTypeData(DungeonConstants.DamageTypeTrue)
                 {
                     Category = DamageCategory.True,
                     Flags = DamageFlags.True
                 },
 
                 // Physical
-                new DamageTypeData("Pierce")
+                new DamageTypeData(DungeonConstants.DamageTypePierce)
                 {
                     Category = DamageCategory.Physical,
                     Flags = DamageFlags.IsBlockable
                 },
-                new DamageTypeData("Slash")
+                new DamageTypeData(DungeonConstants.DamageTypeSlash)
                 {
                     Category = DamageCategory.Physical,
                     Flags = DamageFlags.IsBlockable
                 },
-                new DamageTypeData("Blunt")
+                new DamageTypeData(DungeonConstants.DamageTypeBlunt)
                 {
                     Category = DamageCategory.Physical, 
                     Flags = DamageFlags.IsBlockable | DamageFlags.IsResistable 
                 },
 
                 // Magical
-                new DamageTypeData("Arcane")
+                new DamageTypeData(DungeonConstants.DamageTypeArcane)
                 { 
                     Category = DamageCategory.Magical, 
                     Flags = DamageFlags.IsBlockable | DamageFlags.IsResistable
                 },
-                new DamageTypeData("Astral")
+                new DamageTypeData(DungeonConstants.DamageTypeAstral)
                 { 
                     Category = DamageCategory.Magical, 
                     Flags = DamageFlags.IsResistable 
                 },
 
                 // Elemental
-                new DamageTypeData("Ice")
+                new DamageTypeData(DungeonConstants.DamageTypeIce)
                 {  
                     Category = DamageCategory.Elemental, 
                     Flags = DamageFlags.IsResistable 
                 },
-                new DamageTypeData("Fire")
+                new DamageTypeData(DungeonConstants.DamageTypeFire)
                 { 
                     Category = DamageCategory.Elemental, 
                     Flags = DamageFlags.IsResistable 
                 },
-                new DamageTypeData("Lightning")
+                new DamageTypeData(DungeonConstants.DamageTypeLightning)
                 {   
                     Category = DamageCategory.Elemental, 
                     Flags = DamageFlags.IsResistable 
                 },
 
                 //Divine
-                new DamageTypeData("Divine")
+                new DamageTypeData(DungeonConstants.DamageTypeDivine)
                 {   
                     Category = DamageCategory.Divine, 
                     Flags = DamageFlags.IsResistable 

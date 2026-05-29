@@ -15,7 +15,7 @@ namespace RogueCrawler
         public static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\ItemMaterials.json";
 
         public static bool Loaded = false;
-        public static MaterialTypeData DefaultMaterial => Materials["Iron"];
+        public static MaterialTypeData DefaultMaterial => Materials[DungeonConstants.MaterialIron];
         public static Dictionary<string, MaterialTypeData> Materials = new Dictionary<string, MaterialTypeData>();
 
         public static MappedCommandModule<MaterialTypeData> MaterialNameCommandModule;
@@ -88,30 +88,21 @@ namespace RogueCrawler
         {
             List<MaterialTypeData> materials = new List<MaterialTypeData>(16)
             {
-                new MaterialTypeData("Leather")
+                new MaterialTypeData(DungeonConstants.MaterialLeather)
                 {
                     ValueModifier = 0.75f,
                     WeightModifier = 0.75f,
                     DurabilityModifier = 0.6f,
                     IsArmorMaterial = true,
                 },
-                new MaterialTypeData("Wood")
+                new MaterialTypeData(DungeonConstants.MaterialWood)
                 {
                     ValueModifier = 0.75f,
                     WeightModifier = 0.75f,
                     DurabilityModifier = 0.6f,
                     IsWeaponMaterial = true,
                 },
-                new MaterialTypeData("Copper")
-                {
-                    ValueModifier = 0.75f,
-                    WeightModifier = 0.75f,
-                    DurabilityModifier = 0.6f,
-                    IsMetallic = true,
-                    IsWeaponMaterial = true,
-                    IsArmorMaterial = true,
-                },
-                new MaterialTypeData("Bronze")
+                new MaterialTypeData(DungeonConstants.MaterialCopper)
                 {
                     ValueModifier = 0.75f,
                     WeightModifier = 0.75f,
@@ -120,13 +111,22 @@ namespace RogueCrawler
                     IsWeaponMaterial = true,
                     IsArmorMaterial = true,
                 },
-                new MaterialTypeData("Iron")
+                new MaterialTypeData(DungeonConstants.MaterialBronze)
+                {
+                    ValueModifier = 0.75f,
+                    WeightModifier = 0.75f,
+                    DurabilityModifier = 0.6f,
+                    IsMetallic = true,
+                    IsWeaponMaterial = true,
+                    IsArmorMaterial = true,
+                },
+                new MaterialTypeData(DungeonConstants.MaterialIron)
                 {
                     IsMetallic = true,
                     IsWeaponMaterial = true,
                     IsArmorMaterial = true,
                 },
-                new MaterialTypeData("Steel")
+                new MaterialTypeData(DungeonConstants.MaterialSteel)
                 {
                     ValueModifier = 1.5f,
                     DamageModifier = 1.25f,
@@ -135,7 +135,7 @@ namespace RogueCrawler
                     IsWeaponMaterial = true,
                     IsArmorMaterial = true,
                 },
-                new MaterialTypeData("Mythryl")
+                new MaterialTypeData(DungeonConstants.MaterialMythryl)
                 {
                     ValueModifier = 2.0f,
                     WeightModifier = 0.75f,
@@ -145,7 +145,7 @@ namespace RogueCrawler
                     IsWeaponMaterial = true,
                     IsArmorMaterial = true,
                 },
-                new MaterialTypeData("Magisteel")
+                new MaterialTypeData(DungeonConstants.MaterialManasteel)
                 {
                     ValueModifier = 1.7f,
                     WeightModifier = 0.75f,
@@ -155,7 +155,7 @@ namespace RogueCrawler
                     IsWeaponMaterial = true,
                     IsArmorMaterial = true,
                 },
-                new MaterialTypeData("Adamantite")
+                new MaterialTypeData(DungeonConstants.MaterialAdamantite)
                 {
                     ValueModifier = 3.0f,
                     WeightModifier = 1.5f,

@@ -117,7 +117,8 @@ namespace RogueCrawler
         public const float WeaponMajorAttributeFatigueInfluence = 3f / 4f;
         public const float WeaponMinorAttributeFatigueInfluence = 1 - WeaponMajorAttributeFatigueInfluence;
 
-
+        public const float WeaponMajorAttributeDamageInfluence = 0f;
+        public const float WepaonMinorAttributeDamageInfluence = 0f;
         #endregion
     }
 }
