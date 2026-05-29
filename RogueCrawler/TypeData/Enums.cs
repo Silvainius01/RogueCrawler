@@ -17,5 +17,12 @@ namespace RogueCrawler
     enum AccessorySlotType { Ring, Necklace }
     enum ItemWeaponHandedness { Both, One, Two }
     enum DamageCategory { True, Physical, Magical, Elemental, Divine }
-    // enum WeaponType { Blade, Ranged, Axe, Blunt }
+
+    [Flags]
+    internal enum DamageFlags
+    {
+        True = 0,
+        IsBlockable = 1, // If a damage type is blockable, it can be mitigated by armor.
+        IsResistable = 2
+    }
 }

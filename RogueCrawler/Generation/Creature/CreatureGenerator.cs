@@ -64,7 +64,7 @@ namespace RogueCrawler
                     return 1; // Ensure CON is at least one
                 return value;
             }));
-            creature.Level = Math.Max(creature.MaxAttributes.CreatureLevel, creature.Level);
+            creature.Level = Math.Max(creature.BaseAttributes.CreatureLevel, creature.Level);
 
             creature.Proficiencies.AddSkillLevel(creature.PrimaryWeapon.WeaponType, 30);
             creature.Proficiencies.AddSkillLevel(creature.PrimaryWeapon.ObjectName, 30);
@@ -74,7 +74,7 @@ namespace RogueCrawler
             int maxAttrScore = (creature.Level * DungeonSettings.AttributePointsPerCreatureLevel);
 
             // Allocate remaining attribute points
-            for (int i = creature.MaxAttributes.TotalScore; i < maxAttrScore; ++i)
+            for (int i = creature.BaseAttributes.TotalScore; i < maxAttrScore; ++i)
             {
                 bool applied = false;
                 float rFloat = CommandEngine.Random.NextFloat();

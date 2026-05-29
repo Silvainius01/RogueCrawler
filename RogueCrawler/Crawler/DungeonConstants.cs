@@ -18,7 +18,7 @@ namespace RogueCrawler
         public const string WeaponSkillSpears = "Spears";
         public const string WeaponSkillAxes = "Axes";
         public const string WeaponSkillBlunt = "Blunt";
-        public const string WeaponSkillBows = "Bows";
+        public const string WeaponSkillRanged = "Ranged";
 
         public const string QualityNameT0 = "Broken";
         public const string QualityNameT1 = "Degraded";

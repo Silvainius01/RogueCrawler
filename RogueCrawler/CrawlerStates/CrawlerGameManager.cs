@@ -474,7 +474,7 @@ namespace RogueCrawler
                         case "at":
                         case "attr":
                         case "attributes":
-                            Console.WriteLine(creature.MaxAttributes.InspectString($"{cstr} Attributes:", 0));
+                            Console.WriteLine(creature.BaseAttributes.InspectString($"{cstr} Attributes:", 0));
                             break;
                         case "w":
                         case "weapon":
@@ -549,7 +549,7 @@ namespace RogueCrawler
                         return true;
                     case "at":
                     case "attr":
-                        Console.WriteLine(player.MaxAttributes.InspectString("Your Attributes:", 0));
+                        Console.WriteLine(player.BaseAttributes.InspectString("Your Attributes:", 0));
                         return true;
                     case "w":
                     case "weapon":

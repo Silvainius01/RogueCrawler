@@ -10,21 +10,6 @@ using System.Threading.Tasks;
 
 namespace RogueCrawler
 {
-    [Flags]
-    internal enum DamageFlags
-    {
-        True = 0,
-        IsBlockable = 1, // If a damage type is blockable, it can be mitigated by armor.
-        IsResistable = 2
-    }
-
-    internal struct DamageTypeData
-    {
-        public string Name { get; set; }
-        public DamageCategory Category { get; set; }
-        public DamageFlags Flags { get; set; }
-    }
-
     internal class DamageTypeManager
     {
         public static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\DamageTypes.json";
@@ -60,26 +45,67 @@ namespace RogueCrawler
 
         public static void GenerateDefaultTypes()
         {
-            List<DamageTypeData> types = new List<DamageTypeData>(16);
+            List<DamageTypeData> types = new List<DamageTypeData>(16)
+            {
+                new DamageTypeData("True")
+                {
+                    Category = DamageCategory.True,
+                    Flags = DamageFlags.True
+                },
 
-            types.Add(new DamageTypeData() { Name = "True", Category = DamageCategory.True, Flags = DamageFlags.True });
+                // Physical
+                new DamageTypeData("Pierce")
+                {
+                    Category = DamageCategory.Physical,
+                    Flags = DamageFlags.IsBlockable
+                },
+                new DamageTypeData("Slash")
+                {
+                    Category = DamageCategory.Physical,
+                    Flags = DamageFlags.IsBlockable
+                },
+                new DamageTypeData("Blunt")
+                {
+                    Category = DamageCategory.Physical, 
+                    Flags = DamageFlags.IsBlockable | DamageFlags.IsResistable 
+                },
 
-            // Physical
-            types.Add(new DamageTypeData() { Name = "Pierce", Category = DamageCategory.Physical, Flags = DamageFlags.IsBlockable });
-            types.Add(new DamageTypeData() { Name = "Slash", Category = DamageCategory.Physical, Flags = DamageFlags.IsBlockable });
-            types.Add(new DamageTypeData() { Name = "Blunt", Category = DamageCategory.Physical, Flags = DamageFlags.IsBlockable | DamageFlags.IsResistable });
+                // Magical
+                new DamageTypeData("Arcane")
+                { 
+                    Category = DamageCategory.Magical, 
+                    Flags = DamageFlags.IsBlockable | DamageFlags.IsResistable
+                },
+                new DamageTypeData("Astral")
+                { 
+                    Category = DamageCategory.Magical, 
+                    Flags = DamageFlags.IsResistable 
+                },
 
-            // Magical
-            types.Add(new DamageTypeData() { Name = "Arcane", Category = DamageCategory.Magical, Flags = DamageFlags.IsBlockable | DamageFlags.IsResistable });
-            types.Add(new DamageTypeData() { Name = "Astral", Category = DamageCategory.Magical, Flags = DamageFlags.IsResistable });
+                // Elemental
+                new DamageTypeData("Ice")
+                {  
+                    Category = DamageCategory.Elemental, 
+                    Flags = DamageFlags.IsResistable 
+                },
+                new DamageTypeData("Fire")
+                { 
+                    Category = DamageCategory.Elemental, 
+                    Flags = DamageFlags.IsResistable 
+                },
+                new DamageTypeData("Lightning")
+                {   
+                    Category = DamageCategory.Elemental, 
+                    Flags = DamageFlags.IsResistable 
+                },
 
-            // Elemental
-            types.Add(new DamageTypeData() { Name = "Ice", Category = DamageCategory.Elemental, Flags = DamageFlags.IsResistable });
-            types.Add(new DamageTypeData() { Name = "Fire", Category = DamageCategory.Elemental, Flags = DamageFlags.IsResistable });
-            types.Add(new DamageTypeData() { Name = "Lightning", Category = DamageCategory.Elemental, Flags = DamageFlags.IsResistable });
-
-            //Divine
-            types.Add(new DamageTypeData() { Name = "Divine", Category = DamageCategory.Divine, Flags = DamageFlags.IsResistable });
+                //Divine
+                new DamageTypeData("Divine")
+                {   
+                    Category = DamageCategory.Divine, 
+                    Flags = DamageFlags.IsResistable 
+                },
+            };
 
             using StreamWriter writer = new StreamWriter(DataPath);
             writer.Write(JsonConvert.SerializeObject(types));

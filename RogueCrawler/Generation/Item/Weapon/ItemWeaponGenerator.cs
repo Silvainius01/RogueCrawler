@@ -44,7 +44,7 @@ namespace RogueCrawler
             weapon.ObjectName = GetWeaponName(weaponTypeData, weapon.IsLargeWeapon);
             weapon.ItemName = GetDisplayName(weapon);
 
-            if(weaponTypeData.SubTypes.TryFirst(std => std.TypeName == weapon.ObjectName, out var subType))
+            if (weaponTypeData.SubTypes.TryFirst(std => std.TypeName == weapon.ObjectName, out var subType))
             {
                 weapon.MinorAttribute = subType.MinorAttributeOverride;
                 weapon.Handedness = subType.WeaponHandedness;
@@ -64,7 +64,7 @@ namespace RogueCrawler
             var weaponType = serialized.WeaponType;
 
             // Update for legacy weapons
-            if(serialized.DamageType is null || serialized.DamageType == string.Empty)
+            if (serialized.DamageType is null || serialized.DamageType == string.Empty)
                 serialized.DamageType = WeaponTypeManager.WeaponTypes[weaponType].DamageType;
 
             ItemWeapon weapon = new ItemWeapon()
@@ -109,9 +109,9 @@ namespace RogueCrawler
                 Material = MaterialTypeManager.DefaultMaterial
             };
 
-            unarmedWeapon.Quality *= CreatureSkillUtility.GetWeaponSkillBonus(unarmedWeapon, c.Proficiencies);
+            unarmedWeapon.Quality += CreatureSkillUtility.GetWeaponSkillBonus(unarmedWeapon, c.Proficiencies);
 
-                return unarmedWeapon;
+            return unarmedWeapon;
         }
 
         string GetWeaponName(WeaponTypeData typeData, bool isLarge)
@@ -126,7 +126,7 @@ namespace RogueCrawler
 
             //if (weapon.IsLargeWeapon)
             //    builder.Append("Large");
-            
+
             builder.Append(DungeonHelper.GetQualityPrefix(weapon.Quality));
             builder.Append(weapon.Material.Name);
             builder.Append(weapon.ObjectName);
@@ -138,7 +138,7 @@ namespace RogueCrawler
 
         bool IsLargeWeapon(WeaponTypeData weaponType, ItemWeaponGenerationParameters wParams)
         {
-            return 
+            return
                 weaponType.Handedness != ItemWeaponHandedness.One && (
                 weaponType.Handedness == ItemWeaponHandedness.Two ||
                 CommandEngine.Random.NextInt(100) < wParams.LargeWeaponProbability);

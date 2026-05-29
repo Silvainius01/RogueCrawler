@@ -35,8 +35,10 @@ namespace RogueCrawler
         #region Attribute Settings
         /// <summary>Amount of attribute points a creature can have per level</summary>
         public const int AttributePointsPerCreatureLevel = 3;
-        /// <summary>Bonus HitPoints granted by every point of CON</summary>
-        public const int HitPointsPerConstitution = 5;
+        /// <summary> Amount of stat points (HP, MP, FP) granted per point in their major attribute. </summary>
+        public const int StatPointsPerMajor = 5;
+        /// <summary> Amount of stat points (HP, MP, FP) granted per point in their minor attributes. </summary>
+        public const int StatPointsPerMinor = 2;
         #endregion
 
         #region Skill Settings
@@ -48,7 +50,6 @@ namespace RogueCrawler
 
         public const int ArmorExpPerMove = 1;
         #endregion
-
 
         #region Global Generation Settings
         public const float QualityLevelShiftChance = 0.1f;
@@ -109,6 +110,14 @@ namespace RogueCrawler
         public const int LowWeaponWeight = (int)((MaxWeaponWeight - MinWeaponWeight) * (1.0 / 3.0)) + MinWeaponWeight;
         /// <summary>Large weapon weight multiplier applied AFTER weapon type modifiers.</summary>
         public const float LargeWeaponWeightMultiplier = 1;
+        #endregion
+
+        #region Combat Settings
+        /// <summary> How much afflictions can affect how much fatigue is consumed when swinging a weapon </summary>
+        public const float WeaponMajorAttributeFatigueInfluence = 3f / 4f;
+        public const float WeaponMinorAttributeFatigueInfluence = 1 - WeaponMajorAttributeFatigueInfluence;
+
+
         #endregion
     }
 }

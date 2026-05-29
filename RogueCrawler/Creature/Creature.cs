@@ -77,7 +77,7 @@ namespace RogueCrawler
         public List<CreatureStat> Stats { get; private set; }
         public ReadOnlyDictionary<string, int> TypeResistances { get; private set; }
         public ReadOnlyDictionary<DamageCategory, int> CategoryResistances { get; private set; }
-        public CrawlerAttributeSet MaxAttributes { get; private set; }
+        public CrawlerAttributeSet BaseAttributes { get; private set; }
         public CrawlerAttributeSet Afflictions { get; private set; }
         public CreatureProficiencies Proficiencies { get; set; }
 
@@ -90,25 +90,22 @@ namespace RogueCrawler
         public Creature()
         {
             var maxHealthFunc = (Creature c) =>
-                (c[AttributeType.STR] + c[AttributeType.AGI]) * 2f +
-                (c[AttributeType.CON] + 1) * 5;
+                DungeonHelper.CalcStatPoints(c, AttributeType.CON, AttributeType.STR, AttributeType.AGI);
             var maxFatigueFunc = (Creature c) =>
-                (c[AttributeType.CON] + c[AttributeType.WIL]) * 2f +
-                (c[AttributeType.DEX] + 1) * 5f;
+                DungeonHelper.CalcStatPoints(c, AttributeType.AGI, AttributeType.CON, AttributeType.WIL);
             var maxManaFunc = (Creature c) =>
-                (c[AttributeType.INT] + c[AttributeType.CHA]) * 2 +
-                (c[AttributeType.WIL] + 1) * 5.0f;
+                DungeonHelper.CalcStatPoints(c, AttributeType.WIL, AttributeType.INT, AttributeType.CHA);
             var combatSpeedFunc = (Creature c) => 1.0f + (
-                (c[AttributeType.DEX] * 2f) + 
+                (c[AttributeType.DEX] * 2f) +
                 (c[AttributeType.CHA] / 2f) +
-                + c[AttributeType.WIL]) / 10.0f;
+                +c[AttributeType.WIL]) / 10.0f;
             var critChanceFunc = (Creature c) =>
                 (c[AttributeType.LCK] * 5f +
                 c[AttributeType.INT] +
                 c[AttributeType.DEX]) / 500f;
 
             Afflictions = new CrawlerAttributeSet(0);
-            MaxAttributes = new CrawlerAttributeSet(0);
+            BaseAttributes = new CrawlerAttributeSet(0);
             Proficiencies = new CreatureProficiencies();
 
             Stats = new List<CreatureStat>()
@@ -128,11 +125,11 @@ namespace RogueCrawler
 
         public int GetAttribute(AttributeType attr)
         {
-            return MaxAttributes[attr] + Afflictions[attr];
+            return BaseAttributes[attr] + Afflictions[attr];
         }
-        public float GetAttributePercent(AttributeType attr, float mult = 1.0f)
+        public float GetAttributePercent(AttributeType attr)
         {
-            return GetAttribute(attr) / (float)MaxAttributes[attr];
+            return GetAttribute(attr) / (float)BaseAttributes[attr];
         }
 
         public void HealAllStatsAndAfflictions()
@@ -152,16 +149,19 @@ namespace RogueCrawler
         }
         public float GetCombatDamage()
         {
-            return GetCombatDamage(GetCombatWeapon());
-        }
-        public float GetCombatDamage(ItemWeapon weapon)
-        {
-            float damage = weapon.GetWeaponDamage()
-                + GetAttribute(weapon.MajorAttribute) / 2.0f
-                + GetAttribute(weapon.MinorAttribute) / 4.0f;
-            float skillBonus = 1 + CreatureSkillUtility.GetWeaponSkillBonus(weapon, Proficiencies);
+            float damage = GetWeaponDamage(GetCombatWeapon());
 
-            return damage * skillBonus;
+            return damage;
+        }
+        public float GetWeaponDamage(ItemWeapon weapon)
+        {
+            float damage = weapon.GetWeaponDamage();
+            float skillBonus = 1 + CreatureSkillUtility.GetWeaponSkillBonus(weapon, Proficiencies);
+            float attrMult = 1.0f / (
+                GetAttributePercent(weapon.MajorAttribute) * 0.75f +
+                GetAttributePercent(weapon.MinorAttribute) * 0.25f);
+
+            return damage * skillBonus * attrMult;
         }
         public DamageTypeData GetDamageType()
         {
@@ -222,13 +222,13 @@ namespace RogueCrawler
 
         public void AddAttributePoints(AttributeType attr, int amount)
         {
-            MaxAttributes[attr] += amount;
+            BaseAttributes[attr] += amount;
             UpdateStats(attr);
         }
         public void AddAttributePoints(CrawlerAttributeSet attributes)
         {
             foreach (var kvp in attributes)
-                MaxAttributes[kvp.Key] += kvp.Value;
+                BaseAttributes[kvp.Key] += kvp.Value;
             UpdateStats();
         }
 
@@ -355,7 +355,7 @@ namespace RogueCrawler
             builder.NewlineAppend(tabCount, $"Level: {Level}");
             builder.NewlineAppend(tabCount, $"Damage: {GetCombatDamage()}");
             builder.NewlineAppend(PrimaryWeapon.DebugString($"Weapon Stats:", tabCount));
-            builder.NewlineAppend(MaxAttributes.DebugString("Atributes:", tabCount));
+            builder.NewlineAppend(BaseAttributes.DebugString("Atributes:", tabCount));
             builder.NewlineAppend(Proficiencies.DebugString("Skills:", tabCount));
             builder.NewlineAppend(Armor.DebugString("Armor:", tabCount));
 
@@ -409,7 +409,7 @@ namespace RogueCrawler
             Level = c.Level;
             CurrentStats = new List<float>(c.Stats.Count);
             PrimaryWeapon = (SerializedWeapon)c.PrimaryWeapon.GetSerializable();
-            Attributes = c.MaxAttributes.GetSerializable();
+            Attributes = c.BaseAttributes.GetSerializable();
             Afflictions = c.Afflictions.GetSerializable();
             Profeciencies = c.Proficiencies.GetSerializable();
             ArmorSlots = c.Armor.GetSerializable();

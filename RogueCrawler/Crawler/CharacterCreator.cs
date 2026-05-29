@@ -11,7 +11,7 @@ namespace RogueCrawler
         {
             [AttributeType.STR] = "+5 Carry weight. Get bonus damage for Axes and Blunt weapons.",
             [AttributeType.DEX] = "+0.2 Combat Speed. Bonus damage for Blades, Spears, Axes, and Ranged.",
-            [AttributeType.CON] = $"+{DungeonSettings.HitPointsPerConstitution} HP. Secondary stat for Blunt weapons.",
+            [AttributeType.CON] = $"+{DungeonSettings.StatPointsPerMajor} HP. Secondary stat for Blunt weapons.",
         };
 
         static string AttributeTypePrompt = $"Pick an attribute:\n\t{EnumExt<AttributeType>.Values.ToString(" | ")}\n";
@@ -45,10 +45,10 @@ namespace RogueCrawler
             // Always add 1 to CON.
             player.AddAttributePoints(AttributeType.CON, 1);
             // Set the player to the smallest possible level, or the starting level. Whichever is greater.
-            player.Level = Math.Max(player.MaxAttributes.CreatureLevel, DungeonSettings.StartingPlayerLevel);
+            player.Level = Math.Max(player.BaseAttributes.CreatureLevel, DungeonSettings.StartingPlayerLevel);
 
             // Allow player to apply any extra points
-            int missingPoints = DungeonSettings.AttributePointsPerCreatureLevel * player.Level - player.MaxAttributes.TotalScore;
+            int missingPoints = DungeonSettings.AttributePointsPerCreatureLevel * player.Level - player.BaseAttributes.TotalScore;
             if (missingPoints > 0)
             {
                 AttributePrompt(player, 0, missingPoints, 0);
@@ -78,16 +78,16 @@ namespace RogueCrawler
             Console.WriteLine(staticBuilder.ToString());
             staticBuilder.Clear();
 
-            Console.WriteLine(player.MaxAttributes.DebugString("Your Current Attributes:", tabCount));
+            Console.WriteLine(player.BaseAttributes.DebugString("Your Current Attributes:", tabCount));
             while (attrPoints > 0)
             {
                 AttributeType attr = GetNextAttributeCommand("Add point to: ", "[INVALID] Add point to: ", false);
                 player.AddAttributePoints(attr, 1);
                 --attrPoints;
-                Console.WriteLine($"{attr} {player.MaxAttributes[attr] - 1} -> {player.MaxAttributes[attr]}");
+                Console.WriteLine($"{attr} {player.BaseAttributes[attr] - 1} -> {player.BaseAttributes[attr]}");
             }
 
-            Console.WriteLine(player.MaxAttributes.InspectString("All points distributed.\nNew attributes:", tabCount));
+            Console.WriteLine(player.BaseAttributes.InspectString("All points distributed.\nNew attributes:", tabCount));
         }
 
         public static string GetNextWeaponCommand(string firstPrompt, string failPrompt, bool newline)
