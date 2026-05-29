@@ -31,22 +31,4 @@ namespace RogueCrawler
             return 50 + 25 * (int)Math.Ceiling(Math.Pow(Level, 1.1521));
         }
     }
-
-    class CreatureSkillMetaData
-    {
-        public class LinkedSkill
-        {
-            public string SkillName { get; set; }
-            public float Influence { get; set; }
-        }
-
-        public string SkillName { get; set; }
-        public float FatigueInfluence { get; set; } = 1.0f; // No influence by default
-
-        public AttributeType MajorAttribute { get; set; }
-        public AttributeType MinorAttribute { get; set; }
-        public List<LinkedSkill> LinkedSkills { get; set; }
-
-        public CreatureSkillMetaData(string name) { SkillName = name; }
-    }
 }

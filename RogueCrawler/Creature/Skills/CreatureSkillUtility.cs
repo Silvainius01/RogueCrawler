@@ -13,7 +13,7 @@ namespace RogueCrawler
     static class CreatureSkillUtility
     {
         static readonly float[] BaseSkillQualityBonus = CacheBaseSkillBonuses();
-        static readonly Dictionary<string, CreatureSkillMetaData> SkillMetaDatas = new Dictionary<string, CreatureSkillMetaData>();
+        static readonly Dictionary<string, CreatureSkillTypeData> SkillMetaDatas = new Dictionary<string, CreatureSkillTypeData>();
 
         // Calculate the skill bonuses for weapons. 
         // Assumption is that any bonus follows: floor(specSkill*0.75 + genSkill/4), or 0-100
@@ -55,43 +55,6 @@ namespace RogueCrawler
         public static float GetArmorSkillBonus(ItemArmor armor, CreatureProficiencies p)
         {
             return GetDefaultSkillBonus(p.GetSkillLevel(armor.ArmorClass)) + 0.25f;
-        }
-    }
-
-    class CreatureSkillManager : ITypeManager<CreatureSkillMetaData>
-    {
-        public static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\SkillData.json";
-        static string ITypeManager<CreatureSkillMetaData>.DataPath
-        {
-            get => DataPath;
-            set => throw new InvalidOperationException("Cannot change DataPath after initialization");
-        }
-
-        public static Dictionary<string, CreatureSkillMetaData> SkillData = new Dictionary<string, CreatureSkillMetaData>();
-
-        public static void LoadTypes()
-        {
-
-        }
-
-        public static List<CreatureSkillMetaData> GetDefaultTypes()
-        {
-            List<CreatureSkillMetaData> skillTypes = new List<CreatureSkillMetaData>()
-            {
-                new CreatureSkillMetaData("Evasion")
-                {
-
-                }
-            };
-
-            return skillTypes;
-        }
-
-        public static void SaveDefaultTypes()
-        {
-            using StreamWriter writer = new StreamWriter(DataPath);
-            writer.Write(JsonConvert.SerializeObject(GetDefaultTypes()));
-            writer.Close();
         }
     }
 }

@@ -61,7 +61,7 @@ namespace RogueCrawler
         {
             List<WeaponTypeData> weaponTypes = new List<WeaponTypeData>()
             {
-                new WeaponTypeData(DungeonConstants.WeaponSkillAxes)
+                new WeaponTypeData(DungeonConstants.WeaponTypeAxes)
                 {
                     DamageType = DungeonConstants.DamageTypeSlash,
                     MajorAttribute = AttributeType.STR,
@@ -74,7 +74,7 @@ namespace RogueCrawler
                     OneHandedWeaponNames = new[] { "WarAxe","Tomahawk","Ono" },
                     TwoHandedWeaponNames = new[] { "BattleAxe","Panabas","Tabar"},
                 },
-                new WeaponTypeData(DungeonConstants.WeaponSkillBlades)
+                new WeaponTypeData(DungeonConstants.WeaponTypeBlades)
                 {
                     DamageType = DungeonConstants.DamageTypeSlash,
                     MajorAttribute = AttributeType.AGI,
@@ -100,7 +100,7 @@ namespace RogueCrawler
                         }
                     }
                 },
-                new WeaponTypeData(DungeonConstants.WeaponSkillBlunt)
+                new WeaponTypeData(DungeonConstants.WeaponTypeBlunt)
                 {
                     DamageType = DungeonConstants.DamageTypeBlunt,
                     MajorAttribute = AttributeType.STR,
@@ -121,7 +121,7 @@ namespace RogueCrawler
                         }
                     }
                 },
-                new WeaponTypeData(DungeonConstants.WeaponSkillRanged)
+                new WeaponTypeData(DungeonConstants.WeaponTypeRanged)
                 {
                     DamageType = DungeonConstants.DamageTypePierce,
                     MajorAttribute = AttributeType.AGI,
@@ -134,7 +134,7 @@ namespace RogueCrawler
                     OneHandedWeaponNames = new[] { "Sling","Kunai" },
                     TwoHandedWeaponNames = new[] { "Shortbow","Longbow","Crossbow"},
                 },
-                new WeaponTypeData(DungeonConstants.WeaponSkillSpears)
+                new WeaponTypeData(DungeonConstants.WeaponTypeSpears)
                 {
                     DamageType = DungeonConstants.DamageTypePierce,
                     MajorAttribute = AttributeType.DEX,

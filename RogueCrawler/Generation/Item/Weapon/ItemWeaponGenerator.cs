@@ -92,7 +92,7 @@ namespace RogueCrawler
 
         public ItemWeapon GenerateUnarmed(Creature c)
         {
-            WeaponTypeData wtd = WeaponTypeManager.WeaponTypes[DungeonConstants.WeaponSkillBlunt];
+            WeaponTypeData wtd = WeaponTypeManager.WeaponTypes[DungeonConstants.WeaponTypeBlunt];
 
             ItemWeapon unarmedWeapon = new ItemWeapon()
             {
@@ -103,7 +103,7 @@ namespace RogueCrawler
                 Quality = 1.0f,
                 BaseValue = 0,
                 ObjectName = DungeonConstants.WeaponSkillUnarmed,
-                WeaponType = DungeonConstants.WeaponSkillBlunt,
+                WeaponType = DungeonConstants.WeaponTypeBlunt,
                 ItemName = "Bare Fists",
                 Handedness = ItemWeaponHandedness.Both,
                 MajorAttribute = AttributeType.STR,

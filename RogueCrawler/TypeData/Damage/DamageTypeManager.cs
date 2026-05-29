@@ -29,6 +29,9 @@ namespace RogueCrawler
 
         public static void LoadTypes()
         {
+            if(Loaded) 
+                return;
+
             StreamReader reader = new StreamReader(DataPath);
             string json = reader.ReadToEnd();
             reader.Close();

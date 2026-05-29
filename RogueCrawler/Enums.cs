@@ -6,17 +6,17 @@ using CommandEngine;
 namespace RogueCrawler
 {
     enum DungeonSize { Small, Medium, Large, Huge }
-    enum CreatureType { Humanoid, Goblinoid, Beast, Fey, Demon, Angel }
-    enum Allignment { LawfulGood, LawfulNeutral, LawfulEvil, NeutralGood, TrueNeutral, NeutralEvil, ChaoticGood, ChaoticNeutral, ChoaticEvil }
     enum AttributeType { STR, CON, AGI, DEX, INT, WIL, CHA, LCK }
     enum Direction { North, East, South, West }
     enum DungeonChestType { Weapon, Armor }
     enum QualityLevel { Low, Normal, Superior, Exalted, Legendary, Divine }
     enum ItemWeaponLargeRate { None, Low, Mid, High, All }
     enum ArmorSlotType { Head, Chest, Arm, Hand, Waist, Foot }
-    enum AccessorySlotType { Ring, Necklace }
     enum ItemWeaponHandedness { Both, One, Two }
     enum DamageCategory { True, Physical, Magical, Elemental, Divine }
+
+    // Skill Stuff
+    enum InfluenceMode { None, Least, Greatest, Normalized, Added, Linear, Threshold };
 
     [Flags]
     internal enum DamageFlags

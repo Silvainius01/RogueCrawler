@@ -87,6 +87,14 @@ namespace RogueCrawler
                 totalCoverage += GetSlotArmorCoverage(slot);
             return totalCoverage;
         }
+        public float GetArmorCoverageOfClass(string armorClass)
+        {
+            float totalCoverage = 0f;
+            foreach (var slot in EnumExt<ArmorSlotType>.Values)
+                if (IsSlotOccupied(slot) && ArmorSlots[slot].ArmorClass == armorClass)
+                    totalCoverage += GetSlotArmorCoverage(slot);
+            return totalCoverage;
+        }
 
         public string BriefString()
         {

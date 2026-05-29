@@ -49,9 +49,8 @@ Damage
 	* 1 + skillBonus // Skill
 
 Evasion
-	armorSlow = armorCoverage
-	baseChance = 0.01 * ( 1.25 * evasion * (1.25 - armorEncumberance) ) // Max 150
-	realChance = baseChance * (pDEX+(pWIS/2)) * (0.25+fatiguePercent) // 1*1.5*1.25 = 187.5% at max skill
+	baseChance = 0.01 * evasion * (1 - armorCoverage) // Max 1
+	realChance = baseChance * (pDEX+(pAGI/2)) * (0.25+fatiguePercent) // 1*1.5*1.25 = 187.5% at max skill
 
 Blocking
 

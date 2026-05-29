@@ -184,6 +184,17 @@ namespace RogueCrawler
         }
         public float GetCombatEvasion()
         {
+            if(CreatureSkillTypeManager.SkillData.TryGetValue(DungeonConstants.CreatureSkillEvasion, out var skillData))
+            {
+                float mSkills = skillData.GetSkillInfluence(Proficiencies);
+                float mCoverage = skillData.GetCoverageInfluence(Armor);
+                float mAttrs = skillData.GetAttributeInfluence(this);
+                float mFatigue = skillData.GetFatigueInfluence(this);
+                return mSkills * mCoverage * mAttrs * mFatigue;
+            }
+
+
+
             float chance = 0.01f;
             chance *= (Proficiencies.GetSkillLevel(DungeonConstants.CreatureSkillEvasion) * 0.75f) + (Proficiencies.GetSkillLevel(DungeonConstants.ArmorClassUnarmored) * 0.25f);
             chance *= GetAttributePercent(AttributeType.DEX) + (GetAttributePercent(AttributeType.WIL) / 2);

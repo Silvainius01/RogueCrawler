@@ -14,14 +14,28 @@ namespace RogueCrawler
         public const string ArmorClassMedium = "Medium";
         public const string ArmorClassHeavy = "Heavy";
 
-        public const string WeaponSkillBlades = "Blades";
-        public const string WeaponSkillSpears = "Spears";
-        public const string WeaponSkillAxes = "Axes";
-        public const string WeaponSkillBlunt = "Blunt";
-        public const string WeaponSkillRanged = "Ranged";
+        public const string ArmorSkillUnarmored = ArmorClassUnarmored;
+        public const string ArmorSkillClothing = ArmorClassClothing;
+        public const string ArmorSkillLight = ArmorClassLight;
+        public const string ArmorSkillMedium = ArmorClassMedium;
+        public const string ArmorSkillHeavy = ArmorClassHeavy;
+
+        public const string WeaponTypeBlades = "Blades";
+        public const string WeaponTypeSpears = "Spears";
+        public const string WeaponTypeAxes = "Axes";
+        public const string WeaponTypeBlunt = "Blunt";
+        public const string WeaponTypeRanged = "Ranged";
+
+        public const string WeaponSkillBlades = WeaponTypeBlades;
+        public const string WeaponSkillSpears = WeaponTypeSpears;
+        public const string WeaponSkillAxes = WeaponTypeAxes;
+        public const string WeaponSkillBlunt = WeaponTypeBlunt;
+        public const string WeaponSkillRanged = WeaponTypeRanged;
         public const string WeaponSkillDaggers = "Dagger";
         public const string WeaponSkillShortsword = "Shortsword";
         public const string WeaponSkillUnarmed = "Unarmed";
+
+        public const string CreatureSkillEvasion = "Evasion";
 
         public const string QualityNameT0 = "Broken";
         public const string QualityNameT1 = "Degraded";
@@ -52,7 +66,5 @@ namespace RogueCrawler
         public const string MaterialMythryl = "Mythryl";
         public const string MaterialManasteel = "Manasteel";
         public const string MaterialAdamantite = "Adamantite";
-
-        public const string CreatureSkillEvasion = "Evasion";
     }
 }
