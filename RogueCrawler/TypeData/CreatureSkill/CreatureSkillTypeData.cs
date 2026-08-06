@@ -1,5 +1,6 @@
 ﻿using CommandEngine;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,119 +11,139 @@ using System.Xml.Linq;
 
 namespace RogueCrawler
 {
-    class LinkedSkill
-    {
-        public string SkillName { get; set; }
-        public float Influence { get; set; }
-
-        public LinkedSkill(string skill, float m) { SkillName = skill; Influence = m; }
-    }
-    class LinkedAttribute
-    {
-        public AttributeType Attribute { get; set; }
-        public float Influence { get; set; }
-
-        public LinkedAttribute(AttributeType attr, float m) { Attribute = attr; Influence = m; }
-    }
-
     class CreatureSkillTypeData
     {
-        public string SkillName { get; set; }
+        public string SkillName => SelfInfluence.SkillName;
 
-        public float SelfInfluence { get; set; } = 1.0f; // Contributes 100% of self by default
-        public float FatigueInfluence { get; set; } = 1.0f; // No influence by default
-        public float ArmorCoverageInfluence { get; set; } = 1.0f; // No influence by default
+        public LinkedSkill SelfInfluence { get; set; }
+        public FatigueLink FatigueInfluence { get; set; } = new FatigueLink(1.0f, ModifierMode.Multiplier, ValueInfluenceMode.Always);
+        public LinkedArmorClass DefaultArmorCoverageInf { get; set; } = new LinkedArmorClass("ARMOR_CLASS_HERE", 1.0f, ModifierMode.Multiplier, ValueInfluenceMode.Never);
 
-        public InfluenceMode SkillMode;
-        public InfluenceMode AttributeMode;
-        public InfluenceMode FatigueMode;
-        public InfluenceMode ArmorCoverageMode;
+        public ListInfluenceMode InfluenceMergeMode = ListInfluenceMode.Additive;
+        public ListInfluenceMode SkillListMode;
+        public ListInfluenceMode AttributeListMode;
+        public ListInfluenceMode ArmorListMode;
 
-        public List<string> ExemptArmorClasses { get; set; } = new List<string>();
         public List<LinkedSkill> LinkedSkills { get; set; } = new List<LinkedSkill>();
         public List<LinkedAttribute> LinkedAttributes { get; set; } = new List<LinkedAttribute>();
+        public List<LinkedArmorClass> LinkedArmors { get; set; } = new List<LinkedArmorClass>() { };
 
-        public CreatureSkillTypeData(string name) { SkillName = name; }
+        bool initialized = false;
 
-
-        public float GetSkillInfluence(CreatureProficiencies c, bool normalizeAgainstMax = true)
+        public CreatureSkillTypeData(string name, float influence, ModifierMode modifierMode, ValueInfluenceMode influenceMode) 
         {
-            float retval = 0.0f;
+            SelfInfluence = new LinkedSkill(name, influence, modifierMode, influenceMode);
+        }
+        public CreatureSkillTypeData(LinkedSkill skill)
+        {
+            SelfInfluence = skill;
+        }
+
+        void Initlialize()
+        {
+            if(initialized) 
+                return;
+
+            var armorClasses = ArmorTypeManager.ArmorByClass.Keys;
+            foreach(var ac in armorClasses)
+                if(!LinkedArmors.Contains((link) => link.ArmorClass == ac))
+                {
+                    LinkedArmorClass newLink = new LinkedArmorClass(ac, DefaultArmorCoverageInf);
+                    LinkedArmors.Add(newLink);
+                }
+
+            // Add ourself to the skill list for appropriate modes.
+            switch(SkillListMode)
+            {
+                case ListInfluenceMode.Normalized:
+                case ListInfluenceMode.Additive:
+                case ListInfluenceMode.Multiplicative:
+                    LinkedSkills.Add(SelfInfluence);
+                    break;
+            }
+        }
+
+        public float GetSkillInfluence(CreatureProficiencies c)
+        {
+            if (SkillListMode == ListInfluenceMode.None || !LinkedSkills.Any())
+                return SelfInfluence.Calculate(c);
+
             Comparison<LinkedSkill> comparison = (s1, s2) =>
                 c.GetSkillLevel(s1.SkillName).CompareTo(c.GetSkillLevel(s2.SkillName));
+            float listInf = GetListInfluence(LinkedSkills, SkillListMode, c, comparison);
 
-            switch (SkillMode)
+            switch (SkillListMode)
             {
-                case InfluenceMode.None:
-                    return 1.0f;
-                case InfluenceMode.Least:
-                    LinkedSkill least = LinkedSkills.Least(comparison);
-                    retval =
-                        c.GetSkillLevel(SkillName) * SelfInfluence +
-                        c.GetSkillLevel(least.SkillName) * least.Influence;
-                    break;
-                case InfluenceMode.Greatest:
-                    LinkedSkill greatest = LinkedSkills.Greatest(comparison);
-                    retval =
-                        c.GetSkillLevel(SkillName) * SelfInfluence +
-                        c.GetSkillLevel(greatest.SkillName) * greatest.Influence;
-                    break;
-                case InfluenceMode.Normalized:
-                    float influence = SelfInfluence;
-                    float factor = c.GetSkillLevel(SkillName) * SelfInfluence;
-                    foreach (var skill in LinkedSkills)
-                    {
-                        influence += skill.Influence;
-                        factor += c.GetSkillLevel(skill.SkillName) * skill.Influence;
-                    }
-                    retval = (influence / factor);
-                    break;
-                case InfluenceMode.Added:
-                    retval = c.GetSkillLevel(SkillName) * SelfInfluence;
-                    foreach (var skill in LinkedSkills)
-                        retval += c.GetSkillLevel(skill.SkillName) * skill.Influence;
-                    break;
+                case ListInfluenceMode.Least:
+                case ListInfluenceMode.Greatest:
+                    return SelfInfluence.Calculate(c) + listInf;
+                case ListInfluenceMode.Normalized:
+                case ListInfluenceMode.Additive:
+                case ListInfluenceMode.Multiplicative:
+                    return listInf;
                 default:
                     ConsoleExt.WriteErrorLine($"{SkillName} has an invalid influence mode for linked skills");
-                    return 1.0f;
+                    return 0.0f;
             }
-
-            if (normalizeAgainstMax)
-                return retval / DungeonSettings.MaxSkillLevel;
-            return retval;
         }
 
         public float GetAttributeInfluence(Creature c)
         {
-            float retval = 0.0f;
+            if (!LinkedAttributes.Any())
+                return 1.0f;
+
             Comparison<LinkedAttribute> comparison = (a1, a2) =>
                 c.GetAttributePercent(a1.Attribute).CompareTo(c.GetAttributePercent(a2.Attribute));
+            return GetListInfluence(LinkedAttributes, AttributeListMode, c, comparison);
+        }
 
-            switch (SkillMode)
+        public float GetFatigueInfluence(Creature c)
+        {
+            return FatigueInfluence.Calculate(c);
+        }
+
+        public float GetCoverageInfluence(Creature c)
+        {
+            if (ArmorListMode == ListInfluenceMode.None || !LinkedArmors.Any())
+                return 1.0f;
+            Comparison<LinkedArmorClass> comparison = (a1, a2) =>
+                c.Armor.GetArmorCoverageOfClass(a1.ArmorClass).CompareTo(c.Armor.GetArmorCoverageOfClass(a2.ArmorClass));
+            return GetListInfluence(LinkedArmors, ArmorListMode, c, comparison);
+        }
+
+        float GetListInfluence<TLink, TArg>(List<TLink> links, ListInfluenceMode listMode, TArg linkArg, Comparison<TLink> comparison) where TLink : InfluenceLink<TArg>
+        {
+            float retval = 0.0f;
+            switch (listMode)
             {
-                case InfluenceMode.None:
+                case ListInfluenceMode.None:
                     return 1.0f;
-                case InfluenceMode.Least:
-                    LinkedAttribute least = LinkedAttributes.Least(comparison);
-                    retval = c.GetAttributePercent(least.Attribute) * least.Influence;
+                case ListInfluenceMode.Least:
+                    TLink least = links.Least(comparison);
+                    retval = least.Calculate(linkArg);
                     break;
-                case InfluenceMode.Greatest:
-                    LinkedAttribute greatest = LinkedAttributes.Greatest(comparison);
-                    retval = c.GetAttributePercent(greatest.Attribute) * greatest.Influence;
+                case ListInfluenceMode.Greatest:
+                    TLink greatest = links.Greatest(comparison);
+                    retval = greatest.Calculate(linkArg);
                     break;
-                case InfluenceMode.Normalized:
+                case ListInfluenceMode.Normalized:
                     float influence = 0.0f;
                     float factor = 0.0f;
-                    foreach (var attr in LinkedAttributes)
+                    foreach (var link in links)
                     {
-                        influence += attr.Influence;
-                        factor += c.GetAttributePercent(attr.Attribute) * attr.Influence;
+                        influence += link.Influence;
+                        factor += link.Calculate(linkArg);
                     }
                     retval = (influence / factor);
                     break;
-                case InfluenceMode.Added:
-                    foreach (var attr in LinkedAttributes)
-                        retval += c.GetAttributePercent(attr.Attribute) * attr.Influence;
+                case ListInfluenceMode.Additive:
+                    foreach (var link in links)
+                        retval += link.Calculate(linkArg);
+                    break;
+                case ListInfluenceMode.Multiplicative:
+                    retval = 1.0f;
+                    foreach (var link in links)
+                        retval *= link.Calculate(linkArg);
                     break;
                 default:
                     ConsoleExt.WriteErrorLine($"{SkillName} has an invalid influence mode for linked attributes");
@@ -130,45 +151,6 @@ namespace RogueCrawler
             }
 
             return retval;
-        }
-
-        public float GetFatigueInfluence(Creature c)
-        {
-            float influence = FatigueInfluence + c.Fatigue.Percent;
-            switch (FatigueMode)
-            {
-                case InfluenceMode.None:
-                    return 1.0f;
-                case InfluenceMode.Linear:
-                    return influence;
-                case InfluenceMode.Threshold:
-                    return influence < 1.0f ? influence : 1.0f;
-                default:
-                    ConsoleExt.WriteErrorLine($"{SkillName} has invalid influence mode for fatigue");
-                    return 1.0f;
-            }
-        }
-
-        public float GetCoverageInfluence(CreatureArmorSlots armor)
-        {
-            float influence = (1 - armor.ArmorCoverage) + ArmorCoverageInfluence;
-
-            // Discount coverage added by exempt classes
-            foreach (string ac in ExemptArmorClasses)
-                influence += armor.GetArmorCoverageOfClass(ac);
-
-            switch (FatigueMode)
-            {
-                case InfluenceMode.None:
-                    return 1.0f;
-                case InfluenceMode.Linear:
-                    return influence;
-                case InfluenceMode.Threshold:
-                    return influence < 1.0f ? influence : 1.0f;
-                default:
-                    ConsoleExt.WriteErrorLine($"{SkillName} has invalid influence mode for armor coverage");
-                    return 1.0f;
-            }
         }
     }
 }

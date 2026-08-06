@@ -195,7 +195,7 @@ namespace RogueCrawler
             if(CreatureSkillTypeManager.SkillData.TryGetValue(DungeonConstants.CreatureSkillEvasion, out var skillData))
             {
                 float mSkills = skillData.GetSkillInfluence(Proficiencies);
-                float mCoverage = skillData.GetCoverageInfluence(Armor);
+                float mCoverage = 1 / (1 + skillData.GetCoverageInfluence(this));
                 float mAttrs = skillData.GetAttributeInfluence(this);
                 float mFatigue = skillData.GetFatigueInfluence(this);
                 return mSkills * mCoverage * mAttrs * mFatigue;

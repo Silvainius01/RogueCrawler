@@ -53,6 +53,7 @@ namespace RogueCrawler
             }
             throw new Exception("Armor slots object does not contain an entry");
         }
+
         public float GetArmorRatingOf(ItemArmor armor, CreatureProficiencies wearer)
         {
             if (armor.ArmorClass == DungeonConstants.ArmorClassUnarmored)
@@ -77,6 +78,14 @@ namespace RogueCrawler
             float totalRating = 0f;
             foreach (var slot in EnumExt<ArmorSlotType>.Values)
                 totalRating += GetSlotArmorRating(slot, c);
+            return totalRating;
+        }
+        public float GetArmorRatingOfClass(string armorClass, Creature wearer)
+        {
+            float totalRating = 0.0f;
+            foreach (var slot in EnumExt<ArmorSlotType>.Values)
+                if (IsSlotOccupied(slot) && ArmorSlots[slot].ArmorClass == armorClass)
+                    totalRating += GetSlotArmorRating(slot, wearer);
             return totalRating;
         }
 

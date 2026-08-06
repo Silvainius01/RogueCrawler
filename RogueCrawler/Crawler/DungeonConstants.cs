@@ -66,5 +66,7 @@ namespace RogueCrawler
         public const string MaterialMythryl = "Mythryl";
         public const string MaterialManasteel = "Manasteel";
         public const string MaterialAdamantite = "Adamantite";
+
+        public const string DefaultFloatPlaces = "n1";
     }
 }
