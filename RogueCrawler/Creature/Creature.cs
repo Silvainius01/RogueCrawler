@@ -129,7 +129,8 @@ namespace RogueCrawler
         }
         public float GetAttributePercent(AttributeType attr)
         {
-            return GetAttribute(attr) / (float)BaseAttributes[attr];
+            float bAttr = BaseAttributes[attr] == 0 ? 1.0f : BaseAttributes[attr];
+            return GetAttribute(attr) / bAttr;
         }
 
         public void HealAllStatsAndAfflictions()
@@ -164,7 +165,7 @@ namespace RogueCrawler
             if(CreatureSkillTypeManager.SkillData.TryGetValue(weapon.ObjectName, out var skillData))
             {
                 float mSkill = 1 + CreatureSkillUtility.GetWeaponSkillBonus(skillData, Proficiencies);
-                float mAttr = Math.Min(1.0f, skillData.GetAttributeInfluence(this));
+                float mAttr = skillData.LinkedAttributes.Calculate(this);
                 return damage * mSkill * mAttr;
             }
 
@@ -194,11 +195,12 @@ namespace RogueCrawler
         {
             if(CreatureSkillTypeManager.SkillData.TryGetValue(DungeonConstants.CreatureSkillEvasion, out var skillData))
             {
-                float mSkills = skillData.GetSkillInfluence(Proficiencies);
-                float mCoverage = 1 / (1 + skillData.GetCoverageInfluence(this));
-                float mAttrs = skillData.GetAttributeInfluence(this);
-                float mFatigue = skillData.GetFatigueInfluence(this);
-                return mSkills * mCoverage * mAttrs * mFatigue;
+                float mSkills = skillData.CalculateSkillInfluence(Proficiencies);
+                float mCoverage = skillData.LinkedArmors.Calculate(this);
+                float mAttrs = skillData.LinkedAttributes.Calculate(this);
+                float mStats = skillData.LinkedStats.Calculate(this);
+                return mSkills * mCoverage * mAttrs * mStats;
+                // return skillData.CalculateInfluence(this);
             }
 
             float chance = 0.01f;
@@ -340,6 +342,7 @@ namespace RogueCrawler
             builder.Append($" | AR: {GetArmorRating().ToString("n1")}");
             builder.Append($" | DMG: {GetCombatDamage().ToString("n1")}");
             builder.Append($" | SPD: {CombatSpeed.Value.ToString("n1")}");
+            GetCombatEvasion();
             return builder.ToString();
         }
         public virtual string InspectString(string prefix, int tabCount)

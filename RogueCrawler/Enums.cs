@@ -16,7 +16,7 @@ namespace RogueCrawler
     enum DamageCategory { True, Physical, Magical, Elemental, Divine }
 
     // Skill Stuff
-    enum ListInfluenceMode
+    enum InfluenceMergeMode
     {
         /// <summary> Exters no Influence. </summary>
         None,
@@ -37,7 +37,7 @@ namespace RogueCrawler
         /// </summary>
         Greatest,
         /// <summary>
-        /// When using a list of links, all infleunce links are calculated and added together, then divided by the sum of the raw influence values.
+        /// Infleunce links are calculated and added together, then divided by the sum of the raw influence values.
         /// <para><b>Does nothing on singular links.</b></para>
         /// </summary>
         Normalized,
@@ -52,7 +52,7 @@ namespace RogueCrawler
         /// </summary>
         Multiplicative,
     };
-    enum ValueInfluenceMode
+    enum ConditionMode
     {
         /// <summary>
         /// This value is always ignored.
@@ -90,7 +90,7 @@ namespace RogueCrawler
         /// <summary> Log base Influence of (Value) </summary>
         Logarithm,
         /// <summary>  Nth Root of Value </summary>
-        Root
+        Root,
     };
 
     [Flags]

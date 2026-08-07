@@ -41,6 +41,7 @@ namespace RogueCrawler
             {
                 var data = (CreatureSkillTypeData)serializer.Deserialize(new JTokenReader(obj), typeof(CreatureSkillTypeData));
                 SkillData.Add(data.SkillName, data);
+                data.Initlialize();
                 ++index;
             }
 
@@ -51,32 +52,50 @@ namespace RogueCrawler
         {
             List<CreatureSkillTypeData> skillTypes = new List<CreatureSkillTypeData>()
             {
-                new CreatureSkillTypeData("Evasion", 1.25f, ModifierMode.Multiplier, ValueInfluenceMode.Always)
+                new CreatureSkillTypeData("Evasion", 1.25f, ModifierMode.Multiplier, ConditionMode.Always)
                 {
-                    FatigueInfluence = new FatigueLink(0.25f, ModifierMode.Addend, ValueInfluenceMode.Always),
-
                     // Undefined armor applies coverage as-is (e.g. medium armor)
-                    DefaultArmorCoverageInf = new LinkedArmorClass("DEFAULT_ARMOR_LINK", 1.0f, ModifierMode.Multiplier, ValueInfluenceMode.Never),
-                    ArmorListMode = ListInfluenceMode.Additive,
-                    LinkedArmors = new List<LinkedArmorClass>()
+                    DefaultArmorCoverageInf = new LinkedArmorClass("DEFAULT_ARMOR_LINK", 1.0f, ModifierMode.Multiplier, ConditionMode.Never),
+                    LinkedArmors = new LinkedArmorClassList(InfluenceMergeMode.Additive)
                     {
-                        // Uncovered or lightly clothed slots do not affect evasion.
-                        new LinkedArmorClass(DungeonConstants.ArmorClassUnarmored, 0.0f, ModifierMode.Multiplier, ValueInfluenceMode.Always),
-                        new LinkedArmorClass(DungeonConstants.ArmorClassClothing, 0.0f, ModifierMode.Multiplier, ValueInfluenceMode.Always),
+                        Links = new List<LinkedArmorClass>()
+                        {
+                            // Uncovered or lightly clothed slots do not affect evasion.
+                            new LinkedArmorClass(DungeonConstants.ArmorClassUnarmored, 0.0f, ModifierMode.Multiplier, ConditionMode.Always),
+                            new LinkedArmorClass(DungeonConstants.ArmorClassClothing, 0.0f, ModifierMode.Multiplier, ConditionMode.Always),
                         
-                        // Light armor counts for half coverage
-                        new LinkedArmorClass(DungeonConstants.ArmorClassLight, 0.5f, ModifierMode.Multiplier, ValueInfluenceMode.Always),
+                            // Light armor counts for half coverage
+                            new LinkedArmorClass(DungeonConstants.ArmorClassLight, 0.5f, ModifierMode.Multiplier, ConditionMode.Always),
 
-                        // Heavy armor coverage is doubled
-                        new LinkedArmorClass(DungeonConstants.ArmorSkillHeavy, 2.0f, ModifierMode.Multiplier, ValueInfluenceMode.Always),
+                            // Heavy armor coverage is doubled
+                            new LinkedArmorClass(DungeonConstants.ArmorSkillHeavy, 2.0f, ModifierMode.Multiplier, ConditionMode.Always),
+                        },
+                        PostProcessing = new List<LinkedModifier>()
+                        {
+                            // This results in 1 / (1 + aci)
+                            new LinkedModifier(1, ModifierMode.Addend, ConditionMode.Always),
+                            new LinkedModifier(1, ModifierMode.Dividend, ConditionMode.Always),
+                        },
                     },
-
-                    AttributeListMode = ListInfluenceMode.Additive,
-                    LinkedAttributes = new List<LinkedAttribute>()
+                    LinkedAttributes = new LinkedAttributesList(InfluenceMergeMode.Additive)
                     {
-                        new LinkedAttribute(AttributeType.DEX, 1.0f, ModifierMode.Multiplier),
-                        new LinkedAttribute(AttributeType.AGI, 0.5f, ModifierMode.Multiplier),
+                        Links = new List<LinkedAttribute>()
+                        {
+                            new LinkedAttribute(AttributeType.DEX, 1.0f, ModifierMode.Multiplier),
+                            new LinkedAttribute(AttributeType.AGI, 0.5f, ModifierMode.Multiplier),
+                        },
                     },
+                    LinkedStats = new LinkedCreatureStats(InfluenceMergeMode.Additive)
+                    {
+                        Links = new List<LinkedCreatureStat>()
+                        {
+                            new LinkedCreatureStat(DungeonConstants.CreatureFatigueIndex, DungeonSettings.EvasionFatigueInfluence, ModifierMode.Addend, ConditionMode.Always)
+                        }
+                    },
+                    PostProcessing = new List<LinkedModifier>()
+                    {
+                        new LinkedModifier(0.01f, ModifierMode.Multiplier, ConditionMode.Always)
+                    }
                 }
                 // ADD ARMOR SKILLS
             };
@@ -89,18 +108,22 @@ namespace RogueCrawler
             {
                 foreach (string typeName in wtd.OneHandedWeaponNames.Concat(wtd.TwoHandedWeaponNames))
                 {
-                    var t = new CreatureSkillTypeData(typeName, DungeonSettings.WeaponSpecificSkillInfluence, ModifierMode.Multiplier, ValueInfluenceMode.Always)
+                    var t = new CreatureSkillTypeData(typeName, DungeonSettings.WeaponSpecificSkillInfluence, ModifierMode.Multiplier, ConditionMode.Always)
                     {
-                        SkillListMode = ListInfluenceMode.Additive,
-                        LinkedSkills = new List<LinkedSkill>()
+                        LinkedSkills = new LinkedSkillsList(InfluenceMergeMode.Additive)
                         {
-                            new LinkedSkill(wtd.WeaponType, DungeonSettings.WeaponGeneralSkillInfluence, ModifierMode.Multiplier, ValueInfluenceMode.Always),
+                            Links = new List<LinkedSkill>()
+                            {
+                                new LinkedSkill(wtd.WeaponType, DungeonSettings.WeaponGeneralSkillInfluence, ModifierMode.Multiplier, ConditionMode.Always),
+                            },
                         },
 
-                        AttributeListMode = ListInfluenceMode.Normalized,
-                        LinkedAttributes = new List<LinkedAttribute>()
+                        LinkedAttributes = new LinkedAttributesList(InfluenceMergeMode.Normalized)
                         {
-                            new LinkedAttribute(wtd.MajorAttribute, DungeonSettings.WeaponMajorAttributeInfluence, ModifierMode.Multiplier, ValueInfluenceMode.Always),
+                            Links = new List<LinkedAttribute>()
+                            {
+                                new LinkedAttribute(wtd.MajorAttribute, DungeonSettings.WeaponMajorAttributeInfluence, ModifierMode.Multiplier, ConditionMode.Always),
+                            }
                         }
                     };
 
@@ -108,7 +131,7 @@ namespace RogueCrawler
                     LinkedAttribute minorLink = new LinkedAttribute(wtd.MinorAttribute, DungeonSettings.WeaponMinorAttributeInfluence, ModifierMode.Multiplier);
                     if (wtd.SubTypes.TryFirst(std => std.TypeName == typeName, out var subType))
                         minorLink.Attribute = subType.MinorAttributeOverride;
-                    t.LinkedAttributes.Add(minorLink);
+                    t.LinkedAttributes.Links.Add(minorLink);
 
                     skillTypes.Add(t);
                 }

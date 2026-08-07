@@ -68,5 +68,9 @@ namespace RogueCrawler
         public const string MaterialAdamantite = "Adamantite";
 
         public const string DefaultFloatPlaces = "n1";
+
+        public const int CreatureHealthIndex = 0;
+        public const int CreatureFatigueIndex = 1;
+        public const int CreatureManaIndex = 2;
     }
 }
