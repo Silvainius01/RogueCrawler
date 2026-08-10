@@ -7,25 +7,12 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RogueCrawler
 {
-    class WeaponTypeManager : ITypeManager<WeaponTypeData>
+    class WeaponTypeManager : TypeManager<WeaponTypeData, WeaponTypeManager>
     {
-        static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\WeaponTypes.json";
-        static string ITypeManager<WeaponTypeData>.DataPath
-        { 
-            get => DataPath; 
-            set => throw new InvalidOperationException("Cannot change DataPath after initialization");
-        }
-
-        public static bool IsLoaded = false;
-        static bool ITypeManager<WeaponTypeData>.IsLoaded
-        {
-            get => IsLoaded;
-            set => throw new InvalidOperationException("Cannot set IsLoaded externally.");
-        }
-
         public static Dictionary<string, WeaponTypeData> WeaponTypes = new Dictionary<string, WeaponTypeData>();
 
         public static string RandomType
@@ -43,28 +30,21 @@ namespace RogueCrawler
             }
         }
 
+        static string DataPath = $"{DungeonCrawlerManager.TextPath}\\Data\\WeaponTypes.json";
 
         public static MappedCommandModule<WeaponTypeData> WeaponTypeCommandModule;
 
-        public static void LoadTypes()
+        protected override string GetDataPath()
         {
-            StreamReader reader = new StreamReader(DataPath);
-            string json = reader.ReadToEnd();
-            reader.Close();
-
-            var serializer = JsonSerializer.CreateDefault();
-            var jArray = JsonConvert.DeserializeObject<JArray>(json);
-
-            foreach (var obj in jArray)
-            {
-                WeaponTypeData data = (WeaponTypeData)serializer.Deserialize(new JTokenReader(obj), typeof(WeaponTypeData));
-                WeaponTypes.Add(data.WeaponType, data);
-            }
-            IsLoaded = true;
-            WeaponTypeCommandModule = new MappedCommandModule<WeaponTypeData>("What is the default weapon type prompt??", WeaponTypes);
+            return DataPath;
         }
 
-        public static List<WeaponTypeData> GetDefaultTypes()
+        protected override void AddTypeEntry(WeaponTypeData data)
+        {
+            WeaponTypes.Add(data.WeaponType, data);
+        }
+
+        protected override List<WeaponTypeData> GetDefaultTypesInternal()
         {
             List<WeaponTypeData> weaponTypes = new List<WeaponTypeData>()
             {
@@ -157,13 +137,6 @@ namespace RogueCrawler
             };
 
             return weaponTypes;
-        }
-
-        public static void SaveDefaultTypes()
-        {
-            using StreamWriter writer = new StreamWriter(DataPath);
-            writer.Write(JsonConvert.SerializeObject(GetDefaultTypes()));
-            writer.Close();
         }
     }
 }
