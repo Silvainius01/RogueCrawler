@@ -1,4 +1,4 @@
-﻿using CommandEngine;
+﻿using CommandEngine.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -22,11 +22,16 @@ namespace RogueCrawler
 
         public static Dictionary<string, CreatureSkillTypeData> SkillData = new Dictionary<string, CreatureSkillTypeData>();
 
-        static bool Loaded = false;
+        static bool IsLoaded = false;
+        static bool ITypeManager<CreatureSkillTypeData>.IsLoaded
+        {
+            get => IsLoaded;
+            set => throw new InvalidOperationException("Cannot set IsLoaded externally.");
+        }
 
         public static void LoadTypes()
         {
-            if (Loaded)
+            if (IsLoaded)
                 return;
 
             StreamReader reader = new StreamReader(DataPath);
@@ -45,7 +50,7 @@ namespace RogueCrawler
                 ++index;
             }
 
-            Loaded = true;
+            IsLoaded = true;
         }
 
         public static List<CreatureSkillTypeData> GetDefaultTypes()
@@ -100,8 +105,8 @@ namespace RogueCrawler
                 // ADD ARMOR SKILLS
             };
 
-            // Generate weapon skills
-            IEnumerable<WeaponTypeData> weaponTypes = WeaponTypeManager.TypesLoaded
+            // Generate weapon skills. We only care about the subtype overrides and general skills.
+            IEnumerable<WeaponTypeData> weaponTypes = WeaponTypeManager.IsLoaded
                 ? WeaponTypeManager.WeaponTypes.Values
                 : WeaponTypeManager.GetDefaultTypes();
             foreach (WeaponTypeData wtd in weaponTypes)

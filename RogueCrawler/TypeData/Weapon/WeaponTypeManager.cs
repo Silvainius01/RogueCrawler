@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using CommandEngine;
-using System.IO;
+﻿using CommandEngine;
+using CommandEngine.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace RogueCrawler
 {
@@ -18,7 +19,13 @@ namespace RogueCrawler
             set => throw new InvalidOperationException("Cannot change DataPath after initialization");
         }
 
-        public static bool TypesLoaded = false;
+        public static bool IsLoaded = false;
+        static bool ITypeManager<WeaponTypeData>.IsLoaded
+        {
+            get => IsLoaded;
+            set => throw new InvalidOperationException("Cannot set IsLoaded externally.");
+        }
+
         public static Dictionary<string, WeaponTypeData> WeaponTypes = new Dictionary<string, WeaponTypeData>();
 
         public static string RandomType
@@ -53,7 +60,7 @@ namespace RogueCrawler
                 WeaponTypeData data = (WeaponTypeData)serializer.Deserialize(new JTokenReader(obj), typeof(WeaponTypeData));
                 WeaponTypes.Add(data.WeaponType, data);
             }
-            TypesLoaded = true;
+            IsLoaded = true;
             WeaponTypeCommandModule = new MappedCommandModule<WeaponTypeData>("What is the default weapon type prompt??", WeaponTypes);
         }
 

@@ -46,6 +46,14 @@ namespace RogueCrawler
         public const string QualityNameT6 = "Divine";
         public const string QualityNameError = "Anomalous";
 
+        public const string SkillMasteryTitleT1 = "Novice";
+        public const string SkillMasteryTitleT2 = "Apprentice";
+        public const string SkillMasteryTitleT3 = "Adept";
+        public const string SkillMasteryTitleT4 = "Expert";
+        public const string SkillMasteryTitleT5 = "Master";
+        public const string SkillMasteryTitleT6 = "Grandmaster";
+        public const string SkillMasteryTitleError = "Outcast";
+
         public const string DamageTypeTrue = "True";
         public const string DamageTypeBlunt = "Blunt";
         public const string DamageTypeSlash = "Slash";

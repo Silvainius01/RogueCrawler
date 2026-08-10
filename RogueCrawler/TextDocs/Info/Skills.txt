@@ -1,6 +1,13 @@
 ﻿Skills are character abilities that are increased by doing relevant tasks, or paying for lessons from various trainers.
 All skills are governed by at least one, and commonly two, attributes.
 
+ 0-9	Novice
+10-29	Apprentice
+30-49	Adept
+50-69	Expert
+70-89	Master
+90-100	Grandmaster
+
 List of Skills
 	Axe		[STR, DEX]
 	Blade	[AGI, STR]
