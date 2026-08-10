@@ -1,4 +1,5 @@
 ﻿using CommandEngine;
+using CommandEngine.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -20,7 +21,13 @@ namespace RogueCrawler
             set => throw new InvalidOperationException("Cannot change DataPath after initialization");
         }
 
-        public static bool TypesLoaded = false;
+        static bool IsLoaded = false;
+        static bool ITypeManager<ArmorTypeData>.IsLoaded
+        {
+            get => IsLoaded;
+            set => throw new InvalidOperationException("Cannot set IsLoaded externally.");
+        }
+
         public static Dictionary<string, ArmorTypeData> ArmorTypes = new Dictionary<string, ArmorTypeData>();
         public static Dictionary<string, List<ArmorTypeData>> ArmorByClass = new Dictionary<string, List<ArmorTypeData>>();
 
@@ -44,7 +51,7 @@ namespace RogueCrawler
                     ArmorByClass[data.ArmorClass].Add(data);
                 else ArmorByClass.Add(data.ArmorClass, new List<ArmorTypeData> { data });
             }
-            TypesLoaded = true;
+            IsLoaded = true;
             ArmorTypeCommandModule = new MappedCommandModule<ArmorTypeData>("What is the default armor type prompt??", ArmorTypes);
         }
 

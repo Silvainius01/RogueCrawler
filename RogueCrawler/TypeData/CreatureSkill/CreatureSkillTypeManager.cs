@@ -1,4 +1,4 @@
-﻿using CommandEngine;
+﻿using CommandEngine.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -22,11 +22,16 @@ namespace RogueCrawler
 
         public static Dictionary<string, CreatureSkillTypeData> SkillData = new Dictionary<string, CreatureSkillTypeData>();
 
-        static bool Loaded = false;
+        static bool IsLoaded = false;
+        static bool ITypeManager<CreatureSkillTypeData>.IsLoaded
+        {
+            get => IsLoaded;
+            set => throw new InvalidOperationException("Cannot set IsLoaded externally.");
+        }
 
         public static void LoadTypes()
         {
-            if (Loaded)
+            if (IsLoaded)
                 return;
 
             StreamReader reader = new StreamReader(DataPath);
@@ -44,7 +49,7 @@ namespace RogueCrawler
                 ++index;
             }
 
-            Loaded = true;
+            IsLoaded = true;
         }
 
         public static List<CreatureSkillTypeData> GetDefaultTypes()
@@ -78,15 +83,15 @@ namespace RogueCrawler
                 // ADD ARMOR SKILLS
             };
 
-            // Generate weapon skills
-            IEnumerable<WeaponTypeData> weaponTypes = WeaponTypeManager.TypesLoaded
+            // Generate weapon skills. We only care about the subtype overrides and general skills.
+            IEnumerable<WeaponTypeData> weaponTypes = WeaponTypeManager.IsLoaded
                 ? WeaponTypeManager.WeaponTypes.Values
                 : WeaponTypeManager.GetDefaultTypes();
             foreach (WeaponTypeData wtd in weaponTypes)
             {
-                foreach (string typeName in wtd.OneHandedWeaponNames.Concat(wtd.TwoHandedWeaponNames))
+                foreach (var subType in wtd.SubTypes)
                 {
-                    var t = new CreatureSkillTypeData(typeName)
+                    var t = new CreatureSkillTypeData(subType.TypeName)
                     {
                         SkillMode = InfluenceMode.Normalized,
                         SelfInfluence = DungeonSettings.WeaponSpecificSkillInfluence,
@@ -99,15 +104,11 @@ namespace RogueCrawler
                         LinkedAttributes = new List<LinkedAttribute>()
                         {
                             new LinkedAttribute(wtd.MajorAttribute, DungeonSettings.WeaponMajorAttributeInfluence),
+                            new LinkedAttribute(subType.MinorAttributeOverride, DungeonSettings.WeaponMinorAttributeInfluence),
                         }
                     };
 
-                    // Add the minor attribute of the subtype if applicable.
-                    if (wtd.SubTypes.TryFirst(std => std.TypeName == typeName, out var subType))
-                        t.LinkedAttributes.Add(new LinkedAttribute(subType.MinorAttributeOverride, DungeonSettings.WeaponMinorAttributeInfluence));
-                    else t.LinkedAttributes.Add(new LinkedAttribute(wtd.MinorAttribute, DungeonSettings.WeaponMinorAttributeInfluence));
-
-                    skillTypes.Add(t);
+                   skillTypes.Add(t);
                 }
             }
 

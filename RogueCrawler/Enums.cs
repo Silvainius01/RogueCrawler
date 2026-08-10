@@ -10,6 +10,7 @@ namespace RogueCrawler
     enum Direction { North, East, South, West }
     enum DungeonChestType { Weapon, Armor }
     enum QualityLevel { Low, Normal, Superior, Exalted, Legendary, Divine }
+    enum MasteryLevel { Novice, Apprentice, Adept, Expert, Master, Grandmaster }
     enum ItemWeaponLargeRate { None, Low, Mid, High, All }
     enum ArmorSlotType { Head, Chest, Arm, Hand, Waist, Foot }
     enum ItemWeaponHandedness { Both, One, Two }

@@ -1,4 +1,4 @@
-﻿using CommandEngine;
+﻿using CommandEngine.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -19,7 +19,13 @@ namespace RogueCrawler
             set => throw new InvalidOperationException("Cannot change DataPath after initialization");
         }
 
-        public static bool Loaded = false;
+        static bool IsLoaded = false;
+        static bool ITypeManager<DamageTypeData>.IsLoaded
+        {
+            get => IsLoaded;
+            set => throw new InvalidOperationException("Cannot set IsLoaded externally.");
+        }
+
         public static Dictionary<string, DamageTypeData> DamageTypes = new Dictionary<string, DamageTypeData>();
 
         public static DamageTypeData TrueDamage => DamageTypes[DungeonConstants.DamageTypeTrue];
@@ -29,7 +35,7 @@ namespace RogueCrawler
 
         public static void LoadTypes()
         {
-            if(Loaded) 
+            if(IsLoaded) 
                 return;
 
             StreamReader reader = new StreamReader(DataPath);
@@ -47,7 +53,7 @@ namespace RogueCrawler
                 ++index;
             }
 
-            Loaded = true;
+            IsLoaded = true;
             // MaterialNameCommandModule = new MappedCommandModule<ItemMaterial>("What is the default material name prompt??", Materials);
         }
 
