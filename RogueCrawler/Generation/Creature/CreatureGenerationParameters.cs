@@ -12,52 +12,47 @@ namespace RogueCrawler
     /// </summary>
     class CreatureGenerationParameters : BaseGenerationParameters
     {
-        public Vector2Int BaseHealthRange { get; set; }
-        public Vector2Int LevelRange { get; set; }
-        public Vector2Int BaseStatRange { get; set; } = Vector2Int.Zero;
-        public Vector2Int BaseProfiecienyRange { get; set; }
-        public float WeaponChance { get; set; }
+        public Vector2Int LevelRange { get; set; } = new Vector2Int(-1, -1);
+        public Vector2Int SkillRange { get; set; } = new Vector2Int(-1, -1);
 
         public int MaxArmorPieces { get; set; } = -1;
+        public float WeaponChance { get; set; } = -1;
         public float ArmorChance { get; set; } = -1;
 
-        public const int numQualities = 4;
+        public const int numQualities = 5;
         public QualityLevel QualityBias { get => Qualities[0]; }
         public QualityLevel WeaponQuality { get => Qualities[1]; }
-        public QualityLevel CreatureDifficulty { get => Qualities[2]; }
         public QualityLevel ArmorQuality { get => Qualities[3]; }
+        public QualityLevel SkillQuality { get => Qualities[4]; }
+        public QualityLevel LevelQuality { get=> Qualities[5]; }
 
         public CreatureGenerationParameters(QualityLevel quality) : base(numQualities, quality) { }
         public CreatureGenerationParameters(Func<QualityLevel> DetermineQuality) : base(numQualities, DetermineQuality) { }
         public CreatureGenerationParameters(IEnumerable<QualityLevel> qualities) : base(qualities) { }
         public CreatureGenerationParameters(params QualityLevel[] qualities) : base(qualities) { }
 
-
         protected override bool ValidateInternal()
         {
             QualityLevel[] rLevel = new QualityLevel[] { QualityLevel.Low, QualityLevel.Normal };
+            bool IsValidRange(Vector2Int v) => v.X >= 0 && v.Y >= 0;
 
             while (Qualities.Count < numQualities)
                 Qualities.Add(rLevel.RandomItem());
 
-            LevelRange = Mathc.Max(LevelRange.Sort(), 1);
-            BaseStatRange = Mathc.Max(BaseStatRange.Sort(), 0);
-            BaseHealthRange = Mathc.Max(BaseHealthRange.Sort(), 0);
 
             // I hope this shit gets meme'd on by the code review YouTubers
-            if (ArmorChance < 0)
-            {
-                ArmorChance = ((int)CreatureDifficulty + 1) / (float)EnumExt<QualityLevel>.Count;
-            }
+            // float dr = ((int)CreatureDifficulty + 1) / (float)EnumExt<QualityLevel>.Count;
 
-            if (MaxArmorPieces < 0)
-            {
-                int maxSlots = CreatureArmorSlots.TotalSlots;
-                float percentArmor = ((int)CreatureDifficulty + 1) / (float)EnumExt<QualityLevel>.Count;
-                MaxArmorPieces = (int)(percentArmor * maxSlots);
-            }
+            LevelRange = Mathc.Max(LevelRange.Sort(), 1);
+            ArmorChance = Math.Clamp(ArmorChance, 0.0f, 1.0f);
+            WeaponChance = Math.Clamp(WeaponChance, 0.0f, 1.0f);
+            MaxArmorPieces = Math.Clamp(MaxArmorPieces, 0, CreatureArmorSlots.TotalSlots);
 
-            BaseProfiecienyRange = Mathc.Max(BaseProfiecienyRange.Sort(), 0);
+            if (!IsValidRange(SkillRange))
+                SkillRange = CreatureGenerationPresets.GetBaseSkillRange(SkillQuality);
+            if (!IsValidRange(LevelRange))
+                LevelRange = Mathc.Clamp(LevelRange, 1, 100);
+
             return true;
         }
     }

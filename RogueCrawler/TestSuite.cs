@@ -193,8 +193,6 @@ namespace RogueCrawler
         {
             CreatureGenerationParameters cParams = new CreatureGenerationParameters()
             {
-                BaseHealthRange = new Vector2Int(0, 0),
-                BaseStatRange = new Vector2Int(0, 0),
                 LevelRange = new Vector2Int(1, 1),
                 WeaponChance = 1.0f
             };

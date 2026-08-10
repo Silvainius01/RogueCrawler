@@ -18,8 +18,7 @@ namespace RogueCrawler
             {
                 LevelRange = DungeonGenerator.GetRelativeLootRange(dParams.PlayerLevel),
                 WeaponChance = 1.0f,
-                BaseHealthRange = CreatureGenerationPresets.LowHealthRange,
-                BaseProfiecienyRange = Vector2Int.Zero
+                SkillRange = Vector2Int.Zero
             };
 
             validRooms.Remove(roomManager.EntranceRoom);

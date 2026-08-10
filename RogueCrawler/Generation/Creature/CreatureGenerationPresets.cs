@@ -8,25 +8,6 @@ namespace RogueCrawler
 {
     class CreatureGenerationPresets
     {
-        public static readonly Vector2Int LowHealthRange = new Vector2Int(MinCreatureHitPoints, LowCreatureHitPoints);
-        public static readonly Vector2Int MidHealthRange = new Vector2Int(LowCreatureHitPoints, MidCreatureHitPoints);
-        public static readonly Vector2Int HighHealthRange = new Vector2Int(MidCreatureHitPoints, MaxCreatureHitPoints);
-        public static readonly Vector2Int RenownedHealthRange = new Vector2Int(MidCreatureHitPoints, MaxCreatureHitPoints + (MaxCreatureHitPoints / 2));
-        public static readonly Vector2Int LegendaryHealthRange = new Vector2Int(MidCreatureHitPoints, MaxCreatureHitPoints * 2);
-        public static readonly Vector2Int AnyHealthRange = new Vector2Int(MinCreatureHitPoints, MaxCreatureHitPoints);
-        public static Vector2Int GetBaseHealthRange(QualityLevel level)
-        {
-            switch (level)
-            {
-                case QualityLevel.Low: return LowHealthRange;
-                case QualityLevel.Normal: return MidHealthRange;
-                case QualityLevel.Superior: return HighHealthRange;
-                case QualityLevel.Exalted: return RenownedHealthRange;
-                case QualityLevel.Legendary: return LegendaryHealthRange;
-            }
-            return AnyHealthRange;
-        }
-
         public static readonly Vector2Int LowSkillRange = new Vector2Int(1, 25);
         public static readonly Vector2Int MidSkillRange = new Vector2Int(25, 40);
         public static readonly Vector2Int HighSkillRange = new Vector2Int(40, 60);
@@ -50,13 +31,16 @@ namespace RogueCrawler
         {
             get
             {
-                var q = DungeonChestGenerationPresets.GetRandomQuality();
+                // Each weapon type is equally likely, but unarmed is counted as one.
+                // Therefore, we remove it to account for not having a weapon.
+                int numWeapons = WeaponTypeManager.WeaponTypes.Keys.Count;
+                float wr = (numWeapons - 1) / numWeapons;
                 return new CreatureGenerationParameters(() => EnumExt<QualityLevel>.RandomValue)
                 {
                     LevelRange = new Vector2Int(MinCreatureLevel, MaxCreatureLevel),
-                    BaseHealthRange = AnyHealthRange,
-                    BaseStatRange = new Vector2Int(MinCreatureAttributeScore, MaxCreatureAttributeScore),
-                    WeaponChance = 1.0f
+                    WeaponChance = wr,
+                    ArmorChance = CommandEngine.Random.NextFloat(),
+
                 };
             }
         }

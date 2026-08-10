@@ -106,7 +106,11 @@ namespace RogueCrawler
                 : WeaponTypeManager.GetDefaultTypes();
             foreach (WeaponTypeData wtd in weaponTypes)
             {
-                foreach (string typeName in wtd.OneHandedWeaponNames.Concat(wtd.TwoHandedWeaponNames))
+                var typeNames = wtd.OneHandedWeaponNames
+                    .Concat(wtd.TwoHandedWeaponNames)
+                    .Concat(wtd.SubTypes.Select(st => st.TypeName))
+                    .Distinct();
+                foreach (string typeName in typeNames)
                 {
                     var t = new CreatureSkillTypeData(typeName, DungeonSettings.WeaponSpecificSkillInfluence, ModifierMode.Multiplier, ConditionMode.Always)
                     {

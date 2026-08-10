@@ -3,14 +3,11 @@
 Weapons generate their base damage as follows: 
 	BaseDamage = WeaponTypeBaseDamage * MaterialModifier * Log_2(Quality+1)
 
-Creatures then calculate skill and attribute modifiers:
-	SkillInfluence = (0.75)*WeaponSkill + (0.25)*WeaponCategorySkill
-	AttributeInfluence = 
+Creatures then calculate skill, attribute, and stat modifiers:
+	SkillLevel = (0.75)*WeaponSkill + (0.25)*WeaponCategorySkill
+	SkillInfluence = 1 + Sigmoid(SkillLevel) // Returns a value between 0 and 1
+	AttributeInfluence = p_MAJ*0.75 + p_MIN*0.25
 	CreatureDamage = BaseDamage * SkillInfluence * AttributeInfluence
-
-
-{
-	"ModififierMode": 0 // Multiplier
-	"InfluenceMode": 0 // Linear
-	"Influence": 1 // Null
-}
+	FinalDamage = CreatureDamage * Math.Max(p_Fatigue + Threshold, 1)
+	
+A creature with maxed skills and no afflictions will double their damage. 
